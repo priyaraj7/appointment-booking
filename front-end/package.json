@@ -47,6 +47,8 @@
     ]
   },
   "devDependencies": {
-    "@types/react-datepicker": "^4.4.2"
+    "@types/react-datepicker": "^4.4.2",
+    "@types/react-test-renderer": "^18.0.0",
+    "react-test-renderer": "^18.2.0"
   }
 }

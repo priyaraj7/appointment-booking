@@ -16,15 +16,15 @@ import {
   Td,
 } from "@chakra-ui/react";
 
-function DoctorListPage() {
-  let [doctorsList, setDoctorList] = useState(MockDoctorInfo);
+import { DoctorDetail } from "./DetailDoctorPage";
 
-  function deleteDoctor(id: number) {
-    deleteDoctorInfo(id);
-
-    setDoctorList(MockDoctorInfo);
-  }
-
+export function DoctorListPageComponent({
+  doctorsList,
+  deleteDoctor,
+}: {
+  doctorsList: DoctorDetail[];
+  deleteDoctor: (id: number) => void;
+}) {
   // Table header
   function renderHeader() {
     let headings: string[] = ["Name", "Gender", "Speciality", "Edit"];
@@ -64,12 +64,12 @@ function DoctorListPage() {
         <Button onClick={() => console.log("Add")}>Add New Doctor</Button>
       </Link>
 
-      <Table variant="simple">
+      {/* <Table variant="simple">
         <Thead>
           <Tr>{renderHeader()}</Tr>
         </Thead>
         <Tbody>{renderBody()}</Tbody>
-      </Table>
+      </Table> */}
 
       {doctorsList.map((doctor) => {
         return (
@@ -109,4 +109,19 @@ function DoctorListPage() {
   );
 }
 
+function DoctorListPage() {
+  let [doctorsList, setDoctorList] = useState([...MockDoctorInfo]);
+
+  function deleteDoctor(id: number) {
+    deleteDoctorInfo(id);
+    setDoctorList([...MockDoctorInfo]);
+  }
+
+  return (
+    <DoctorListPageComponent
+      doctorsList={doctorsList}
+      deleteDoctor={deleteDoctor}
+    />
+  );
+}
 export default DoctorListPage;

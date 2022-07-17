@@ -27,7 +27,7 @@ function App() {
           element={<EditDoctorInfo />}
         />
 
-        <Route path="/public-view" element={<PatientFrontPage />} ŚS/>
+        <Route path="/public-view" element={<PatientFrontPage />} />
         <Route
           path="/public-doctor-list"
           element={<PatientsDoctorListPage />}
