@@ -40,13 +40,20 @@ export function DoctorListPageComponent({
           <Td>{doc.speciality}</Td>
           <Td>
             {" "}
-            <Link
+            {/* <Link
+              to={{
+                pathname: `/view-doctor-details/${doc.id}/${doc.last_name}`,
+              }}
+            > */}
+            <Button
+              as={Link}
               to={{
                 pathname: `/view-doctor-details/${doc.id}/${doc.last_name}`,
               }}
             >
-              <Button>Detail</Button>
-            </Link>
+              Detail
+            </Button>
+            {/* </Link> */}
           </Td>
         </Tr>
       );
