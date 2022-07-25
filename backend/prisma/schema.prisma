@@ -9,3 +9,47 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model DoctorInfo {
+  id         Int                   @id @default(autoincrement())
+  email      String                @unique
+  firstName  String
+  lastName   String
+  gender     String
+  speciality String
+  insurances ListInsuranceDoctor[]
+  location   Location[] // relation field
+}
+
+model Location {
+  id Int @id @default(autoincrement())
+
+  clinicName String
+  address    String
+  gender     String
+  zipCode    Int
+
+  DoctorInfo   DoctorInfo? @relation(fields: [doctorInfoId], references: [id]) // relation field
+  doctorInfoId Int // relation scalar field
+}
+
+model Insurance {
+  id Int @id @default(autoincrement())
+
+  insuranceName String
+
+  doctors ListInsuranceDoctor[]
+
+  // DoctorInfo   DoctorInfo? @relation(fields: [doctorInfoId], references: [id])
+  // doctorInfoId Int?
+}
+
+model ListInsuranceDoctor {
+  doctorInfo   DoctorInfo? @relation(fields: [doctorInfoId], references: [id])
+  doctorInfoId Int
+
+  insurance   Insurance? @relation(fields: [insuranceId], references: [id])
+  insuranceId Int
+
+  @@id([doctorInfoId, insuranceId])
+}
