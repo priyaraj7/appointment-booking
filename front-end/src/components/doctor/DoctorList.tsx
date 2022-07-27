@@ -27,7 +27,7 @@ function DoctorListPage() {
 
   // Table header
   function renderHeader() {
-    let headings: string[] = ["Name", "Gender", "Speciality", "Edit"];
+    let headings: string[] = ["Name", "Gender", "Speciality", "Detail"];
     return headings.map((header) => <Th key={header}>{header}</Th>);
   }
 
