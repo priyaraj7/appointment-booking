@@ -1,5 +1,17 @@
 # Appointment Booking App
 
+### Table of Contents
+
+[About the Project]((#about-the-project)
+[Features of this app](#features-of-this-app)
+[Technology used](#technology-used-1)
+[App Design/List of APIs](#app-design)
+[Wire framing](#wire-framing)
+
+### About the Project
+
+This is fullstack app. Planning to build using react, typescript, node and postgres
+
 ### Features of this app
 
 This app has two users: Admin and Patients
