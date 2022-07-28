@@ -5,6 +5,7 @@
 [About the Project]((#about-the-project)
 [Features of this app](#features-of-this-app)
 [Technology used](#technology-used-1)
+[Database diagram](#database-diagram)
 [App Design/List of APIs](#app-design)
 [Wire framing](#wire-framing)
 
@@ -45,7 +46,7 @@ This app has two users: Admin and Patients
 - Typescript
 - Chakra UI
 
-### Technology used
+### Database diagram
 
 [dbdiagram](https://dbdiagram.io/d/62df135d0d66c746554ab129)
 ![dbdiagram](./screenshots/dbdiagram.png)
