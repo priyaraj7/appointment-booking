@@ -2,11 +2,11 @@
 
 ### Table of Contents
 
-[About the Project]((#about-the-project)
-[Features of this app](#features-of-this-app)
-[Technology used](#technology-used-1)
-[Database diagram](#database-diagram)
-[App Design/List of APIs](#app-design)
+[About the Project](#about-the-project)  
+[Features of this app](#features-of-this-app)  
+[Technology used](#technology-used-1)  
+[Database diagram](#database-diagram)  
+[App Design/List of APIs](#app-design)  
 [Wire framing](#wire-framing)
 
 ### About the Project
