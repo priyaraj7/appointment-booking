@@ -53,14 +53,14 @@ This app has two users: Admin and Patients
 
 ### App Design
 
-| Functionality             | Method | Path                                |
-| ------------------------- | ------ | ----------------------------------- |
-| list of doctors           | GET    | /                                   |
-| add new doctor            | POST   | /add-doctor                         |
-| update doctor info        | PUT    | /edit-doctor-details/:id/:last_name |
-| View individual doctor    | GET    | /view-doctor-details/:id/:last_name |
-| Delete individual doctor  | DELETE | /:id                                |
-| Doctor list(public- view) | GET    | /public-doctor-list                 |
+| Functionality             | Method | Path            |
+| ------------------------- | ------ | --------------- |
+| list of doctors           | GET    | /admin          |
+| add new doctor            | POST   | /api/doctor     |
+| update doctor info        | PUT    | /api/doctor/:id |
+| View individual doctor    | GET    | /api/doctor/:id |
+| Delete individual doctor  | DELETE | /api/doctor/:id |
+| Doctor list(public- view) | GET    | /               |
 
 ### Wire framing
 
