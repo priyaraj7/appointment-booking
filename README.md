@@ -48,9 +48,13 @@ This app has two users: Admin and Patients
 
 ### Database diagram
 
-[dbdiagram](https://dbdiagram.io/d/62df135d0d66c746554ab129)
+<!--
+[dbdiagram](https://dbdiagram.io/d/62df135d0d66c746554ab129) -->
+
 [db2](https://dbdiagram.io/d/62e41aeaf31da965e841437b)
-[db3](https://dbdiagram.io/d/62e4273bf31da965e841a4a0)
+
+<!-- [db3](https://dbdiagram.io/d/62e4273bf31da965e841a4a0) -->
+
 ![dbdiagram](./screenshots/schema2.png)
 
 ### App Design
