@@ -1,8 +1,10 @@
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+//import dotenv from "dotenv";
+import "dotenv/config";
+import allRouter from "./routes/routes";
 
-dotenv.config();
+//dotenv.config();
 
 //import { db } from "../db/db-connection.js";
 //backend/db/db-connection.js
@@ -24,16 +26,18 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // get request
-app.get("/api/users", cors(), async (req: Request, res: Response) => {
-  try {
-    const { rows: users } = await db.query("SELECT * FROM users");
-    console.log("user:", users);
-    res.send(users);
-  } catch (err) {
-    console.log(err);
-    return res.status(400).json({ err });
-  }
-});
+// app.get("/api/users", cors(), async (req: Request, res: Response) => {
+//   try {
+//     const { rows: users } = await db.query("SELECT * FROM users");
+//     console.log("user:", users);
+//     res.send(users);
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(400).json({ err });
+//   }
+// });
+
+app.use("/api", allRouter);
 
 app.listen(port, () => {
   //dotenv.config();

@@ -1,4 +1,11 @@
+-- Run the file to create the database, apply the schema,
+-- psql -f puppies.sql
+
+DROP DATABASE IF EXISTS appointment_psql;
 CREATE DATABASE appointment_psql -- create tables
+
+\c appointment_psql
+
 CREATE TABLE IF NOT EXISTS users (
        user_id serial PRIMARY KEY,
        first_name VARCHAR(50) NOT NULL,
@@ -140,3 +147,9 @@ VALUES(
               '2023-11-01 11:10:00+01',
               '2023-11-01 11:30:00+01'
        );
+
+
+
+-- QUERIES
+
+       Select * from doctor Full Join users on  fk_user_id = user_id where fk_user_id is not null;
