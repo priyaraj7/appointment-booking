@@ -1,12 +1,12 @@
 -- Run the file to create the database, apply the schema,
 -- psql -f puppies.sql
-
 DROP DATABASE IF EXISTS appointment_psql;
+
 CREATE DATABASE appointment_psql -- create tables
+\ c appointment_psql
 
-\c appointment_psql
 
-CREATE TABLE IF NOT EXISTS users (
+ CREATE TABLE IF NOT EXISTS users (
        user_id serial PRIMARY KEY,
        first_name VARCHAR(50) NOT NULL,
        last_name VARCHAR(50),
@@ -53,41 +53,33 @@ VALUES(
               'Male',
               'max@dolphin.dev'
        );
--- CREATE TABLE IF NOT EXISTS doctor (
---        doctor_id serial PRIMARY KEY,
---        speciality VARCHAR(50) NOT NULL,
---        location VARCHAR(50) NOT NULL,
---        about VARCHAR NOT NULL,
---        user_id INT NOT NULL,
---        CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(user_id)
--- );
+
 CREATE TABLE IF NOT EXISTS doctor (
        doctor_id serial PRIMARY KEY,
        speciality VARCHAR(50) NOT NULL,
        location VARCHAR(50) NOT NULL,
        about VARCHAR NOT NULL,
-       fk_user_id INT not NULL,
+       active BOOLEAN NOT NULL fk_user_id INT not NULL,
        CONSTRAINT fk_user FOREIGN KEY(fk_user_id) REFERENCES users(user_id)
 );
-
-INSERT INTO doctor(speciality, location, about, fk_user_id)
+INSERT INTO doctor(speciality, location, about, active, fk_user_id)
 VALUES(
               'Pediatrician',
               '5615 4th Court CA',
               'nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum',
-              1
+              TRUE 1
        ),
        (
               'Cardiologist',
               '666 8th AVE WA',
               'duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer',
-              2
+              TRUE 2
        ),
        (
-              'Gynocologist',
+              '      Gynocologist',
               '334 45th AVE WA',
               'ipsum aliquam non mauris morbi non lectus aliquam sit amet diam in',
-              3
+              TRUE 3
        );
 
 CREATE TABLE IF NOT EXISTS patient (
@@ -97,6 +89,7 @@ CREATE TABLE IF NOT EXISTS patient (
        fk_user_id INT not NULL,
        CONSTRAINT fk_user FOREIGN KEY(fk_user_id) REFERENCES users(user_id)
 );
+
 INSERT INTO patient(phone_number, address, fk_user_id)
 VALUES(
               '1234567890',
@@ -147,9 +140,55 @@ VALUES(
               '2023-11-01 11:10:00+01',
               '2023-11-01 11:30:00+01'
        );
-
-
-
 -- QUERIES
 
-       Select * from doctor Full Join users on  fk_user_id = user_id where fk_user_id is not null;
+-- getting all doctor
+Select *
+from doctor
+       Full Join users on fk_user_id = user_id
+where fk_user_id is not null;
+
+-- update doctor
+
+UPDATE doctor 
+FULL JOIN users 
+       ON doctor.fk_user_id = users.user_id
+SET users.first_name = "updatedname",
+    doctor.speciality = "upPediat"
+WHERE doctor.fk_user_id = 1 
+       AND users.user_id = 1;
+
+
+
+-- UPDATE
+--     doctor d
+--     JOIN      
+--     users u ON doc.fk_user_id = u.user_id 
+
+-- SET
+--     users.first_name = "updatedname"
+-- WHERE
+--    doctor.fk_user_id = 1 
+--        AND users.user_id = 1;
+
+
+
+       -- CREATE TABLE IF NOT EXISTS doctor (
+--        doctor_id serial PRIMARY KEY,
+--        speciality VARCHAR(50) NOT NULL,
+--        location VARCHAR(50) NOT NULL,
+--        about VARCHAR NOT NULL,
+--        user_id INT NOT NULL,
+--        CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(user_id)
+-- );
+
+
+-- UPDATE doctor
+-- SET mf_item_number = gm.SKU --etc
+-- FROM item_master im
+-- JOIN group_master gm
+--     ON im.sku = gm.sku 
+-- JOIN Manufacturer_Master mm
+--     ON gm.ManufacturerID = mm.ManufacturerID
+-- WHERE im.mf_item_number like 'STA%' AND
+--       gm.manufacturerID = 34
