@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
-import getAllDoctorDetail from "../model/queries";
+// import getAllDoctorDetail from "../model/queries";
+import { getAllDoctorDetail } from "../controller/controller";
 
 const router = express.Router();
 

@@ -59,7 +59,8 @@ CREATE TABLE IF NOT EXISTS doctor (
        speciality VARCHAR(50) NOT NULL,
        location VARCHAR(50) NOT NULL,
        about VARCHAR NOT NULL,
-       active BOOLEAN NOT NULL fk_user_id INT not NULL,
+       active BOOLEAN NOT NULL,
+       fk_user_id INT not NULL,
        CONSTRAINT fk_user FOREIGN KEY(fk_user_id) REFERENCES users(user_id)
 );
 INSERT INTO doctor(speciality, location, about, active, fk_user_id)
@@ -143,20 +144,41 @@ VALUES(
 -- QUERIES
 
 -- getting all doctor
-Select *
-from doctor
-       Full Join users on fk_user_id = user_id
-where fk_user_id is not null;
+SELECT doctor.*, users.*
+FROM doctor 
+INNER JOIN users 
+ON doctor.fk_user_id = users.user_id
+WHERE doctor.fk_user_id = users.user_id;
 
 -- update doctor
 
-UPDATE doctor 
-FULL JOIN users 
-       ON doctor.fk_user_id = users.user_id
-SET users.first_name = "updatedname",
-    doctor.speciality = "upPediat"
-WHERE doctor.fk_user_id = 1 
-       AND users.user_id = 1;
+
+UPDATE users
+SET first_name = 'updatedname'
+WHERE user_id = 1;
+
+UPDATE doctor
+SET speciality = 'updatedspeciality'
+WHERE doctor_id = 1;
+
+
+
+-- UPDATE doctor 
+-- FULL JOIN users 
+--        ON doctor.fk_user_id = users.user_id
+-- SET users.first_name = "updatedname",
+--     doctor.speciality = "upPediat"
+-- WHERE doctor.fk_user_id = 1 
+--        AND users.user_id = 1;
+
+
+-- SELECT doctor.*, users.*
+-- INNER JOIN users 
+-- ON doctor.fk_user_id = users.user_id
+-- SET users.first_name = "updatedname",
+--     doctor.speciality = "upPediat"
+-- WHERE doctor.fk_user_id = 1 
+--        AND users.user_id = 1;
 
 
 
@@ -192,3 +214,17 @@ WHERE doctor.fk_user_id = 1
 --     ON gm.ManufacturerID = mm.ManufacturerID
 -- WHERE im.mf_item_number like 'STA%' AND
 --       gm.manufacturerID = 34
+
+
+-- SELECT doctor.*, users.*
+-- FROM doctor 
+-- FULL JOIN users 
+-- ON doctor.fk_user_id = users.user_id
+-- WHERE doctor.fk_user_id = users.user_id 
+
+
+-- SELECT doctor.*, users.*
+-- FROM doctor 
+-- INNER JOIN users 
+-- ON doctor.fk_user_id = users.user_id
+-- WHERE doctor.fk_user_id = users.user_id;
