@@ -25,7 +25,7 @@ export const getAllDoctorDetailQuery = async () => {
 };
 
 ////////////////////////////////////////////
-// udpdate doctor and user table using trasduction. It will create query automatically. No need of writing query
+// update doctor and user table using transaction'. It will create query automatically. No need of writing query
 export const updateIndividualDoctor = async (
   userId: number,
   data: Partial<User & Doctor>
@@ -110,19 +110,63 @@ export const updateIndividualDoctor = async (
 
 //////////////////////////////////////
 
-/*
-// using an ES7 syntax for the callback:
-db.tx('my-transaction', async t {
-  // t.ctx = transaction context object
+// insert into doctor and user Table
 
-  const user = await t.one('INSERT INTO Users(name, age) VALUES($1, $2) RETURNING id', ['Mike', 25]);
-  return t.none('INSERT INTO Events(userId, name) VALUES($1, $2)', [user.id, 'created']);
-})
-.then(data => {
-  // success
-  // data = as returned from the transaction's callback
-})
-.catch(error => {
-  // error
-});
-*/
+export const insertDoctorAndUserInfo = async (data: User & Doctor) => {
+  let needsUserTableUpdate = true;
+  let needsDoctorTableUpdate = true;
+
+  const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
+    // {
+    //   name: "user_id",
+    //   cnd: true,
+    //   prop: "userId",
+    //   skip: (col) => !col.exists,
+    // },
+    {
+      name: "first_name",
+      prop: "firstName",
+    },
+    { name: "last_name", prop: "lastName", skip: (col) => !col.exists },
+    { name: "email" },
+    { name: "gender" },
+  ]);
+
+  const doctorTableColumn = new pgp.helpers.ColumnSet([
+    {
+      name: "fk_user_id",
+      prop: "fkUserId",
+      cnd: true,
+    },
+    { name: "speciality" },
+    { name: "location" },
+    { name: "about" },
+    { name: "active" },
+  ]);
+
+  const insertUserData = pgp.helpers.insert(data, userTableColumn, "users");
+
+  // const concatUserDoctorTable = pgp.helpers.concat([
+  //   insertUserData,
+  //   insertDoctorData,
+  // ]);
+
+  // return concatUserDoctorTable;
+
+  return db.tx("insertDoctor", async (t) => {
+    const userRow = await t.one<User>(insertUserData + " RETURNING *");
+    console.log(userRow);
+    const insertDoctorData =
+      pgp.helpers.insert(
+        { ...data, fkUserId: userRow.user_id },
+        doctorTableColumn,
+        "doctor"
+      ) + " RETURNING *";
+    console.log(insertDoctorData);
+    const doctorRow = await t.one(insertDoctorData);
+    return { ...userRow, ...doctorRow };
+  });
+};
+
+//const concatAllQueries = pgp.helpers.concat([ customerDataQuery, campaignStatusQuery, messageStatusQuery ]);
+// https://stackoverflow.com/questions/70888428/multi-row-insert-into-multiple-tables-in-a-transaction-using-pg-promise?rq=1
