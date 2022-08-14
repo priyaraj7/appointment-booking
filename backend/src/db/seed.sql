@@ -3,7 +3,7 @@
 DROP DATABASE IF EXISTS appointment_psql;
 
 CREATE DATABASE appointment_psql -- create tables
-\ c appointment_psql
+\c appointment_psql
 
 
  CREATE TABLE IF NOT EXISTS users (
@@ -68,19 +68,19 @@ VALUES(
               'Pediatrician',
               '5615 4th Court CA',
               'nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum',
-              TRUE 1
+              TRUE, 1
        ),
        (
               'Cardiologist',
               '666 8th AVE WA',
               'duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer',
-              TRUE 2
+              TRUE, 2
        ),
        (
               '      Gynocologist',
               '334 45th AVE WA',
               'ipsum aliquam non mauris morbi non lectus aliquam sit amet diam in',
-              TRUE 3
+              TRUE, 3
        );
 
 CREATE TABLE IF NOT EXISTS patient (
@@ -117,6 +117,7 @@ CREATE TABLE IF NOT EXISTS appointment (
        CONSTRAINT fk_patient FOREIGN KEY(fk_patient_id) REFERENCES patient(patient_id),
        CONSTRAINT fk_doctor FOREIGN KEY(fk_doctor_id) REFERENCES doctor(doctor_id)
 );
+
 INSERT INTO appointment(
               fk_patient_id,
               fk_doctor_id,

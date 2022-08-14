@@ -65,3 +65,8 @@ This app has two users: Admin and Patients
 ### Wire framing
 
 Please click [here](https://app.diagrams.net/#G1QRSWzpZixVfFF8Xm8DQCiyJ28nhHi1j6) to see wire-framing
+
+## Resource referred
+
+[pg-promose transaction](https://github.com/vitaly-t/pg-promise/wiki/Learn-by-Example#transactions)
+[Developing a CRUD Node.js Application with PostgreSQL](https://glaucia86.medium.com/developing-a-crud-node-js-application-with-postgresql-d25febb1cc4)

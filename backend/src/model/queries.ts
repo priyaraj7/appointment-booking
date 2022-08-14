@@ -24,12 +24,18 @@ export const getAllDoctorDetailQuery = async () => {
   return doctorsDetail;
 };
 
+////////////////////////////////////////////
+// udpdate doctor and user table using trasduction. It will create query automatically. No need of writing query
 export const updateIndividualDoctor = async (
   userId: number,
   data: Partial<User & Doctor>
 ) => {
   // https://vitaly-t.github.io/pg-promise/helpers.ColumnSet.html
   // Used to map data to column names in the pg table
+
+  let needsUserTableUpdate = true;
+  let needsDoctorTableUpdate = true;
+
   const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
     {
       name: "user_id",
@@ -59,29 +65,50 @@ export const updateIndividualDoctor = async (
     { name: "active", skip: (col) => !col.exists },
   ]);
 
-  const updateUserCondition = pgp.as.format(" WHERE user_id = ${userId}", data);
-  const updateDoctorCondition = pgp.as.format(
-    " WHERE fk_user_id = ${userId}",
-    data
-  );
+  const updateUserCondition = pgp.as.format(" WHERE user_id = ${userId}", {
+    userId,
+  });
+  const updateDoctorCondition = pgp.as.format(" WHERE fk_user_id = ${userId}", {
+    userId,
+  });
 
   await db.tx("updateDoctor", async (t) => {
-    t.none(
-      pgp.helpers.update(
-        { ...data, userID: userId },
-        userTableColumn,
-        "users"
-      ) + updateUserCondition
-    );
-    t.none(
-      pgp.helpers.update(
-        { ...data, userID: userId },
-        doctorTableColumn,
-        "doctor"
-      ) + updateDoctorCondition
-    );
+    let userTableUpdateStatement;
+    let doctorTableUpdateStatement;
+    try {
+      userTableUpdateStatement =
+        pgp.helpers.update(
+          { ...data, userID: userId },
+          doctorTableColumn,
+          "doctor"
+        ) + updateDoctorCondition;
+    } catch (e) {
+      needsUserTableUpdate = false;
+    }
+    try {
+      doctorTableUpdateStatement =
+        pgp.helpers.update(
+          { ...data, userID: userId },
+          userTableColumn,
+          "users"
+        ) + updateUserCondition;
+    } catch (e) {
+      needsDoctorTableUpdate = false;
+    }
+
+    if (needsUserTableUpdate) {
+      console.log(userTableUpdateStatement);
+      t.none(userTableUpdateStatement);
+    }
+
+    if (needsDoctorTableUpdate) {
+      console.log(doctorTableUpdateStatement);
+      t.none(doctorTableUpdateStatement);
+    }
   });
 };
+
+//////////////////////////////////////
 
 /*
 // using an ES7 syntax for the callback:
