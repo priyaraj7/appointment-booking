@@ -1,4 +1,3 @@
-import express, { Request, Response } from "express";
 import db, { pgp } from "../db/db-connection";
 
 export type User = {
@@ -15,6 +14,12 @@ export type Doctor = {
   location: string;
   about: string;
   active: boolean;
+};
+
+export type Patient = {
+  patientId: number;
+  address: string;
+  phoneNumber: string;
 };
 
 export const getAllDoctorDetailQuery = async () => {
@@ -113,16 +118,7 @@ export const updateIndividualDoctor = async (
 // insert into doctor and user Table
 
 export const insertDoctorAndUserInfo = async (data: User & Doctor) => {
-  let needsUserTableUpdate = true;
-  let needsDoctorTableUpdate = true;
-
   const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
-    // {
-    //   name: "user_id",
-    //   cnd: true,
-    //   prop: "userId",
-    //   skip: (col) => !col.exists,
-    // },
     {
       name: "first_name",
       prop: "firstName",
@@ -146,19 +142,12 @@ export const insertDoctorAndUserInfo = async (data: User & Doctor) => {
 
   const insertUserData = pgp.helpers.insert(data, userTableColumn, "users");
 
-  // const concatUserDoctorTable = pgp.helpers.concat([
-  //   insertUserData,
-  //   insertDoctorData,
-  // ]);
-
-  // return concatUserDoctorTable;
-
   return db.tx("insertDoctor", async (t) => {
     const userRow = await t.one<User>(insertUserData + " RETURNING *");
     console.log(userRow);
     const insertDoctorData =
       pgp.helpers.insert(
-        { ...data, fkUserId: userRow.user_id },
+        { ...data, fkUserId: userRow.userId },
         doctorTableColumn,
         "doctor"
       ) + " RETURNING *";
@@ -168,5 +157,84 @@ export const insertDoctorAndUserInfo = async (data: User & Doctor) => {
   });
 };
 
-//const concatAllQueries = pgp.helpers.concat([ customerDataQuery, campaignStatusQuery, messageStatusQuery ]);
-// https://stackoverflow.com/questions/70888428/multi-row-insert-into-multiple-tables-in-a-transaction-using-pg-promise?rq=1
+//...................       PATIENT      ................... //
+
+export const updateIndividualPatient = async (
+  userId: number,
+  data: Partial<User & Patient>
+) => {
+  let needsUserTableUpdate = true;
+  let needsPatientTableUpdate = true;
+
+  const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
+    {
+      name: "user_id",
+      cnd: true,
+      prop: "userId",
+      skip: (col) => !col.exists,
+    },
+    {
+      name: "first_name",
+      prop: "firstName",
+      skip: (col) => !col.exists,
+    },
+    { name: "last_name", prop: "lastName", skip: (col) => !col.exists },
+    { name: "email", skip: (col) => !col.exists },
+    { name: "gender", skip: (col) => !col.exists },
+  ]);
+
+  const patientTableColumn = new pgp.helpers.ColumnSet([
+    {
+      name: "fk_user_id",
+      prop: "fk_user_id",
+      cnd: true,
+    },
+    { name: "address", skip: (col) => !col.exists },
+    { name: "phone_number", prop: "phoneNumber", skip: (col) => !col.exists },
+  ]);
+
+  const updateUserCondition = pgp.as.format(" WHERE user_id = ${userId}", {
+    userId,
+  });
+  const updatePatientCondition = pgp.as.format(
+    " WHERE fk_user_id = ${userId}",
+    {
+      userId,
+    }
+  );
+
+  await db.tx("updatePatient", async (t) => {
+    let userTableUpdateStatement;
+    let patientTableUpdateStatement;
+    try {
+      userTableUpdateStatement =
+        pgp.helpers.update(
+          { ...data, userID: userId },
+          patientTableColumn,
+          "patient"
+        ) + updatePatientCondition;
+    } catch (e) {
+      needsUserTableUpdate = false;
+    }
+    try {
+      patientTableUpdateStatement =
+        pgp.helpers.update(
+          { ...data, userID: userId },
+          userTableColumn,
+          "users"
+        ) + updateUserCondition;
+    } catch (e) {
+      needsPatientTableUpdate = false;
+    }
+
+    if (needsUserTableUpdate) {
+      console.log(userTableUpdateStatement);
+      t.none(userTableUpdateStatement);
+    }
+
+    if (needsPatientTableUpdate) {
+      console.log(patientTableUpdateStatement);
+      t.none(patientTableUpdateStatement);
+    }
+  });
+};
