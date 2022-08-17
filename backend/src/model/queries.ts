@@ -10,7 +10,7 @@ export type User = {
 
 export type Doctor = {
   doctorId: number;
-  speciality: string;
+  specialty: string;
   location: string;
   about: string;
   active: boolean;
@@ -21,17 +21,21 @@ export type Patient = {
   address: string;
   phoneNumber: string;
 };
+// take all type from user and doctor make takeout userId or doctorId
+export type CreateDoctorInput = Omit<User & Doctor, "userId" | "doctorId">;
+
+//       CRUD Functionality      //
 
 export const getAllDoctorDetailQuery = async () => {
-  const { rows: doctorsDetail } = await db.query(
+  const result = await db.query(
     "SELECT doctor.*, users.* FROM doctor INNER JOIN users ON doctor.fk_user_id = users.user_id WHERE doctor.fk_user_id = users.user_id;"
   );
-  return doctorsDetail;
+  return result;
 };
 
 ////////////////////////////////////////////
 // update doctor and user table using transaction'. It will create query automatically. No need of writing query
-export const updateIndividualDoctor = async (
+export const updateIndividualDoctorQuery = async (
   userId: number,
   data: Partial<User & Doctor>
 ) => {
@@ -117,7 +121,7 @@ export const updateIndividualDoctor = async (
 
 // insert into doctor and user Table
 
-export const insertDoctorAndUserInfo = async (data: User & Doctor) => {
+export const insertDoctorAndUserInfo = async (data: CreateDoctorInput) => {
   const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
     {
       name: "first_name",
@@ -131,10 +135,10 @@ export const insertDoctorAndUserInfo = async (data: User & Doctor) => {
   const doctorTableColumn = new pgp.helpers.ColumnSet([
     {
       name: "fk_user_id",
-      prop: "fkUserId",
+      prop: "fk_user_id",
       cnd: true,
     },
-    { name: "speciality" },
+    { prop: "specialty", name: "speciality" },
     { name: "location" },
     { name: "about" },
     { name: "active" },
@@ -143,11 +147,13 @@ export const insertDoctorAndUserInfo = async (data: User & Doctor) => {
   const insertUserData = pgp.helpers.insert(data, userTableColumn, "users");
 
   return db.tx("insertDoctor", async (t) => {
-    const userRow = await t.one<User>(insertUserData + " RETURNING *");
+    const userRow = await t.one(insertUserData + " RETURNING *");
+    //const userId = await t.one<User>(insertUserData + " RETURNING user_id");
     console.log(userRow);
+    //console.log(userId);
     const insertDoctorData =
       pgp.helpers.insert(
-        { ...data, fkUserId: userRow.userId },
+        { ...data, fk_user_id: userRow.user_id },
         doctorTableColumn,
         "doctor"
       ) + " RETURNING *";
@@ -159,9 +165,10 @@ export const insertDoctorAndUserInfo = async (data: User & Doctor) => {
 
 //...................       PATIENT      ................... //
 
+export type UpdatePatientInput = Partial<Omit<User, "userId"> & Patient>;
 export const updateIndividualPatient = async (
   userId: number,
-  data: Partial<User & Patient>
+  data: UpdatePatientInput
 ) => {
   let needsUserTableUpdate = true;
   let needsPatientTableUpdate = true;
@@ -236,5 +243,43 @@ export const updateIndividualPatient = async (
       console.log(patientTableUpdateStatement);
       t.none(patientTableUpdateStatement);
     }
+  });
+};
+// ...................   insert patient   ...................
+export const addingPatientAndUserInfo = async (data: User & Patient) => {
+  const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
+    {
+      name: "first_name",
+      prop: "firstName",
+    },
+    { name: "last_name", prop: "lastName", skip: (col) => !col.exists },
+    { name: "email" },
+    { name: "gender" },
+  ]);
+
+  const patientTableColumn = new pgp.helpers.ColumnSet([
+    {
+      name: "fk_user_id",
+      prop: "fk_user_id",
+      cnd: true,
+    },
+    { name: "address" },
+    { name: "phone_number", prop: "phoneNumber" },
+  ]);
+
+  const insertUserData = pgp.helpers.insert(data, userTableColumn, "users");
+
+  return db.tx("insertPatient", async (t) => {
+    const userRow = await t.one(insertUserData + " RETURNING *");
+    console.log(userRow);
+    const insertPatientData =
+      pgp.helpers.insert(
+        { ...data, fk_user_id: userRow.user_id },
+        patientTableColumn,
+        "patient"
+      ) + " RETURNING *";
+    console.log(insertPatientData);
+    const PatientRow = await t.one(insertPatientData);
+    return { ...userRow, ...PatientRow };
   });
 };

@@ -1,8 +1,16 @@
 import express, { Request, Response } from "express";
 // import getAllDoctorDetail from "../model/queries";
-import { getAllDoctorDetail } from "../controller/controller";
+import {
+  getAllDoctorDetail,
+  updateIndividualDoctor,
+  addNewDoctor,
+} from "../controller/controller";
 
 const router = express.Router();
 
-router.get("/doctors", getAllDoctorDetail);
+router.get("/admin", getAllDoctorDetail);
 export default router;
+
+router.put("/doctor/:id", updateIndividualDoctor);
+
+router.post("/doctor", addNewDoctor);
