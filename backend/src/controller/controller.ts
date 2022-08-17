@@ -80,3 +80,44 @@ export const addNewDoctor = async (req: Request, res: Response) => {
     return res.status(400).json({ error });
   }
 };
+
+//  ...............   PATIENT   ...............
+
+export const addNewPatient = async (req: Request, res: Response) => {
+  let newPatientInput: Module.CreatePatientInput = {
+    firstName: req.body.firstName as string,
+    lastName: req.body.lastName as string,
+    email: req.body.email as string,
+    gender: req.body.gender as string,
+    address: req.body.address as string,
+    phoneNumber: req.body.phoneNumber as string,
+  };
+  try {
+    const result = await Module.addingPatientAndUserInfo(newPatientInput);
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error });
+  }
+};
+
+export const updatePatientInfo = async (req: Request, res: Response) => {
+  // write validation
+  let id = Number(req.params.id);
+  console.log(id);
+  let updatePatientInput: Module.CreatePatientInput = {
+    firstName: req.body.firstName as string,
+    lastName: req.body.lastName as string,
+    email: req.body.email as string,
+    gender: req.body.gender as string,
+    address: req.body.address as string,
+    phoneNumber: req.body.phoneNumber as string,
+  };
+  try {
+    const result = await Module.updateIndividualPatient(id, updatePatientInput);
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error });
+  }
+};

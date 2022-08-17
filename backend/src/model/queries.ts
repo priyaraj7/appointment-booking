@@ -24,6 +24,10 @@ export type Patient = {
 // take all type from user and doctor make takeout userId or doctorId
 export type CreateDoctorInput = Omit<User & Doctor, "userId" | "doctorId">;
 
+export type CreatePatientInput = Omit<User & Patient, "userId" | "patientId">;
+
+export type UpdatePatientInput = Partial<Omit<User, "userId"> & Patient>;
+
 //       CRUD Functionality      //
 
 export const getAllDoctorDetailQuery = async () => {
@@ -165,7 +169,6 @@ export const insertDoctorAndUserInfo = async (data: CreateDoctorInput) => {
 
 //...................       PATIENT      ................... //
 
-export type UpdatePatientInput = Partial<Omit<User, "userId"> & Patient>;
 export const updateIndividualPatient = async (
   userId: number,
   data: UpdatePatientInput
@@ -246,7 +249,7 @@ export const updateIndividualPatient = async (
   });
 };
 // ...................   insert patient   ...................
-export const addingPatientAndUserInfo = async (data: User & Patient) => {
+export const addingPatientAndUserInfo = async (data: CreatePatientInput) => {
   const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
     {
       name: "first_name",
