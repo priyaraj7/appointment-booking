@@ -32,7 +32,19 @@ export type UpdatePatientInput = Partial<Omit<User, "userId"> & Patient>;
 
 export const getAllDoctorDetailQuery = async () => {
   const result = await db.query(
-    "SELECT doctor.*, users.* FROM doctor INNER JOIN users ON doctor.fk_user_id = users.user_id WHERE doctor.fk_user_id = users.user_id;"
+    `SELECT 
+      doctor_id as "doctorId",
+      speciality,
+      location,
+      about,
+      active,
+      first_name as "firstName",
+      last_name as "lastName",
+      email,
+      gender,
+      user_id as "userId",
+      fk_user_id as "fkUserId"
+      FROM doctor INNER JOIN users ON doctor.fk_user_id = users.user_id WHERE doctor.fk_user_id = users.user_id;`
   );
   return result;
 };

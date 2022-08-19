@@ -110,8 +110,8 @@ VALUES(
 
 CREATE TABLE IF NOT EXISTS appointment (
        id serial PRIMARY KEY,
-       fk_patient_id INT NOT NULL REFERENCES patient (patient_id) ON UPDATE CASCADE ON DELETE CASCADE,
-       fk_doctor_id INT NOT NULL REFERENCES doctor (doctor_id) ON UPDATE CASCADE ON DELETE CASCADE,
+       fk_patient_id INT NOT NULL REFERENCES patient (patient_id),
+       fk_doctor_id INT NOT NULL REFERENCES doctor (doctor_id),
        start_time TIMESTAMP WITH TIME ZONE NOT NULL,
        end_time TIMESTAMP WITH TIME ZONE NOT NULL,
        CONSTRAINT fk_patient FOREIGN KEY(fk_patient_id) REFERENCES patient(patient_id),

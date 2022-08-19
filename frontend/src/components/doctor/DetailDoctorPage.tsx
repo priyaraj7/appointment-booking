@@ -37,13 +37,6 @@ export default function DetailDoctorPage() {
   if (!state) {
     return <div>Doctor not found</div>;
   }
-  // let [doctorsList, setDoctorList] = useState(MockDoctorInfo);
-
-  // function deleteDoctor(id: number) {
-  //   const newList = doctorsList.filter((doctor: object) => doctor.id !== id);
-
-  //   setDoctorList(newList);
-  // }
 
   return (
     <Center py={6}>

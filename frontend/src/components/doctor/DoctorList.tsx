@@ -15,8 +15,10 @@ import {
   Th,
   Td,
 } from "@chakra-ui/react";
+import { Doctor } from "./DoctorControl";
 
-function DoctorListPage() {
+function DoctorListPage({ doctor = [] }: { doctor?: Doctor[] }) {
+  console.log(doctor);
   let [doctorsList, setDoctorList] = useState(MockDoctorInfo);
 
   function deleteDoctor(id: number) {
@@ -32,17 +34,18 @@ function DoctorListPage() {
   }
 
   function renderBody() {
-    return doctorsList.map((doc) => {
+    return doctor.map((doc) => {
+      console.log(doc);
       return (
-        <Tr key={doc.id}>
-          <Td>{`${doc.first_name} ${doc.last_name}`}</Td>
+        <Tr key={doc.doctorId}>
+          <Td>{`${doc.firstName} ${doc.lastName}`}</Td>
           <Td>{doc.gender}</Td>
           <Td>{doc.speciality}</Td>
           <Td>
             {" "}
             <Link
               to={{
-                pathname: `/view-doctor-details/${doc.id}/${doc.last_name}`,
+                pathname: `/view-doctor-details/${doc.doctorId}/${doc.lastName}`,
               }}
             >
               <Button>Detail</Button>
@@ -70,41 +73,6 @@ function DoctorListPage() {
         </Thead>
         <Tbody>{renderBody()}</Tbody>
       </Table>
-
-      {doctorsList.map((doctor) => {
-        return (
-          <Box key={doctor.id}>
-            <Text key={doctor.id}>{doctor.first_name}</Text>
-            <Text>{doctor.gender}</Text>
-            <Text>{doctor.location}</Text>
-            <Link
-              to={{
-                pathname: `/view-doctor-details/${doctor.id}/${doctor.last_name}`,
-              }}
-            >
-              <Button>Detail</Button>
-            </Link>
-
-            {/* <Link
-              to={{
-                pathname: `/edit-doctor-details/${doctor.id}/${doctor.last_name}`,
-              }}
-            >
-              <Button onClick={() => console.log("edit")}>Edit</Button>
-            </Link> */}
-
-            <Button
-              onClick={() => {
-                if (window.confirm("Are you sure to delete this record?"))
-                  deleteDoctor(doctor.id);
-              }}
-            >
-              Delete
-            </Button>
-            <hr />
-          </Box>
-        );
-      })}
     </>
   );
 }

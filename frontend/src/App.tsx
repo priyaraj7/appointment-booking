@@ -11,10 +11,13 @@ import AddNewDoctor from "./components/doctor/AddNewDoctor";
 import PatientFrontPage from "./components/patient/PatientsFrontPage";
 import PatientsDoctorListPage from "./components/patient/PatientsDoctorListPage";
 import BookAppointmentPage from "./components/patient/BookAppointmentPage";
+import DoctorControl from "./components/doctor/DoctorControl";
 function App() {
   return (
     <ChakraProvider>
       <Routes>
+        <Route path="/api/admin" element={<DoctorControl />} />
+
         <Route path="/" element={<DoctorListPage />} />
         <Route path="/add-doctor" element={<AddNewDoctor />} />
 
