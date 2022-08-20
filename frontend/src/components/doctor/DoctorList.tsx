@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { MockDoctorInfo } from "../../Mocks/DoctorList";
-import { deleteDoctorInfo } from "../api/FetchData";
+
 import {
   Heading,
   Box,
@@ -21,15 +21,15 @@ function DoctorListPage({ doctor = [] }: { doctor?: Doctor[] }) {
   console.log(doctor);
   let [doctorsList, setDoctorList] = useState(MockDoctorInfo);
 
-  function deleteDoctor(id: number) {
-    deleteDoctorInfo(id);
+  // function deleteDoctor(id: number) {
+  //   deleteDoctorInfo(id);
 
-    setDoctorList(MockDoctorInfo);
-  }
+  //   setDoctorList(MockDoctorInfo);
+  // }
 
   // Table header
   function renderHeader() {
-    let headings: string[] = ["Name", "Gender", "Speciality", "Detail"];
+    let headings: string[] = ["Name", "Gender", "Specialty", "Detail"];
     return headings.map((header) => <Th key={header}>{header}</Th>);
   }
 
@@ -40,7 +40,7 @@ function DoctorListPage({ doctor = [] }: { doctor?: Doctor[] }) {
         <Tr key={doc.doctorId}>
           <Td>{`${doc.firstName} ${doc.lastName}`}</Td>
           <Td>{doc.gender}</Td>
-          <Td>{doc.speciality}</Td>
+          <Td>{doc.specialty}</Td>
           <Td>
             {" "}
             <Link

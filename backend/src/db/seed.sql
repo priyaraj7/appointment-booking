@@ -56,14 +56,14 @@ VALUES(
 
 CREATE TABLE IF NOT EXISTS doctor (
        doctor_id serial PRIMARY KEY,
-       speciality VARCHAR(50) NOT NULL,
+       specialty VARCHAR(50) NOT NULL,
        location VARCHAR(50) NOT NULL,
        about VARCHAR NOT NULL,
-       active BOOLEAN NOT NULL,
+       status BOOLEAN NOT NULL,
        fk_user_id INT not NULL,
        CONSTRAINT fk_user FOREIGN KEY(fk_user_id) REFERENCES users(user_id)
 );
-INSERT INTO doctor(speciality, location, about, active, fk_user_id)
+INSERT INTO doctor(specialty, location, about, active, fk_user_id)
 VALUES(
               'Pediatrician',
               '5615 4th Court CA',
@@ -77,7 +77,7 @@ VALUES(
               TRUE, 2
        ),
        (
-              '      Gynocologist',
+              'Gynocologist',
               '334 45th AVE WA',
               'ipsum aliquam non mauris morbi non lectus aliquam sit amet diam in',
               TRUE, 3
@@ -159,7 +159,7 @@ SET first_name = 'updatedname'
 WHERE user_id = 1;
 
 UPDATE doctor
-SET speciality = 'updatedspeciality'
+SET specialty = 'updatedspeciality'
 WHERE doctor_id = 1;
 
 

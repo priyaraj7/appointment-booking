@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 // import getAllDoctorDetail from "../model/queries";
 import {
   getAllDoctorDetail,
+  getIndividualDoctor,
   updateIndividualDoctor,
   addNewDoctor,
   addNewPatient,
@@ -11,7 +12,8 @@ import {
 const router = express.Router();
 
 router.get("/admin", getAllDoctorDetail);
-export default router;
+
+router.get("/doctor/:id", getIndividualDoctor);
 
 router.put("/doctor/:id", updateIndividualDoctor);
 
@@ -21,3 +23,5 @@ router.post("/doctor", addNewDoctor);
 router.post("/patient", addNewPatient);
 
 router.put("/patient/:id", updatePatientInfo);
+
+export default router;
