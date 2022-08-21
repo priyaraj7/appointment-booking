@@ -8,19 +8,14 @@ import { Doctor } from "./DoctorControl"; // type import
 function EditDoctorInfo() {
   // const params = useParams();
   // const navigate = useNavigate();
-
   // if (!params.id) {
   //   return <div>No Doctor found</div>;
   // }
-
   // const doctorID = parseInt(params.id, 10);
-
   // const individualDoctorDetail = fetchIndividualDoctorInfo(doctorID);
-
   // if (!individualDoctorDetail) {
   //   return <div>Doctor not found</div>;
   // }
-
   // return (
   //   <>
   //     <Heading>Update Doctor Info</Heading>
@@ -35,8 +30,7 @@ function EditDoctorInfo() {
   //       }}
   //     />
   //   </>
-
-  //);
+  // );
   return null;
 }
 
