@@ -27,13 +27,13 @@ export default function DetailDoctorPage() {
   const params = useParams();
 
   // ! means I know doctor id always exist -- don't give error
-  const doctorID = parseInt(params.id!, 10);
+  const userId = parseInt(params.id!, 10);
 
   // get request
 
   useEffect(() => {
     const getIndividualDoctor = async () => {
-      const request = await fetch(`/api/doctor/${doctorID}`);
+      const request = await fetch(`/api/doctor/${userId}`);
       const result = (await request.json()) as Doctor;
 
       console.log(result);
@@ -46,8 +46,8 @@ export default function DetailDoctorPage() {
   return individualDoctor ? (
     <Center py={6}>
       <Box
-        maxW={"320px"}
-        w={"full"}
+        // maxW={"320px"}
+        // w={"full"}
         // bg={useColorModeValue("white", "gray.900")}
         boxShadow={"2xl"}
         rounded={"lg"}
@@ -63,7 +63,7 @@ export default function DetailDoctorPage() {
         // color={useColorModeValue("gray.700", "gray.400")}
         >
           <Text as="span" fontWeight="semibold">
-            About me:
+            About:
           </Text>
           {individualDoctor.about}
         </Text>
@@ -89,28 +89,33 @@ export default function DetailDoctorPage() {
           {individualDoctor.location}
         </Text>
 
-        <Stack mt={8} direction={"row"} spacing={4}>
-          <Link
-            to={{
-              pathname: `/edit-doctor-details/${individualDoctor.doctorId}/${individualDoctor.lastName}`,
+        {/* <Stack mt={8} direction={"row"} spacing={4}> */}
+        <Link
+          to={{
+            pathname: `/edit-doctor-details/${individualDoctor.userId}/${individualDoctor.lastName}`,
+          }}
+        >
+          <Button
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            fontSize={"sm"}
+            rounded={"full"}
+            bg={"tomato"}
+            boxShadow={
+              "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+            }
+            _hover={{
+              bg: "red.500",
+            }}
+            _focus={{
+              bg: "red.500",
             }}
           >
-            <Button
-              flex={1}
-              fontSize={"sm"}
-              rounded={"full"}
-              bg={"green"}
-              _hover={{
-                bg: "green.500",
-              }}
-              _focus={{
-                bg: "green.500",
-              }}
-            >
-              Edit
-            </Button>
-          </Link>
-          <Button
+            Edit
+          </Button>
+        </Link>
+        {/* <Button
             flex={1}
             fontSize={"sm"}
             rounded={"full"}
@@ -126,8 +131,8 @@ export default function DetailDoctorPage() {
             }}
           >
             Delete
-          </Button>
-        </Stack>
+          </Button> */}
+        {/* </Stack> */}
       </Box>
     </Center>
   ) : (

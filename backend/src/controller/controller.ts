@@ -69,6 +69,7 @@ export const updateIndividualDoctor = async (req: Request, res: Response) => {
       id,
       updateDoctorInfo
     );
+    console.log(result, "update result");
     res.send(result);
   } catch (error) {
     return res.status(400).json({ error });

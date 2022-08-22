@@ -30,8 +30,8 @@ function AddNewDoctor({}) {
     <>
       <Heading mb={4}>Add Doctor Form</Heading>
       <DoctorForm
-        onSave={(doc: Doctor) => {
-          addDoctorOnSubmit(doc);
+        onSave={async (doc: Doctor) => {
+          await addDoctorOnSubmit(doc);
           navigate("/api/admin");
         }}
       />

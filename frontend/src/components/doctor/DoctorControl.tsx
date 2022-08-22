@@ -25,9 +25,6 @@ const DoctorControl = () => {
 
   const params = useParams();
 
-  // ! means I know doctor id always exist -- don't give error
-  const doctorID = parseInt(params.id!, 10);
-
   // get request
   useEffect(() => {
     const getAllDoctor = async () => {

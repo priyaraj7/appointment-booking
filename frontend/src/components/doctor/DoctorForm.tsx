@@ -10,37 +10,52 @@ import {
   Heading,
   Button,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Doctor } from "./DoctorControl"; // type import
+import { useForm } from "react-hook-form";
 
 type Props = {
   individualDoctorDetail?: Doctor;
   onSave: (details: Doctor) => void;
 };
 
-function DoctorForm({ individualDoctorDetail, onSave }: Props) {
+const initialValue: Doctor = {
+  doctorId: Math.round(Math.random() * 1000), // need to work on these 3"
+  fkUserId: Math.round(Math.random() * 1000),
+  userId: Math.round(Math.random() * 1000),
+  firstName: "",
+  lastName: "",
+  email: "",
+  gender: "",
+  location: "",
+  status: true,
+  specialty: "",
+  about: "",
+};
+
+// const {
+//   register,
+//   handleSubmit,
+//   formState: { errors },
+// } = useForm();
+
+function DoctorForm({ individualDoctorDetail = initialValue, onSave }: Props) {
   const [isActive, setIsActive] = useState(false);
   // const navigate = useNavigate();
 
-  const initialValue: Doctor = {
-    doctorId: Math.round(Math.random() * 1000), // need to work on these 3
-    fkUserId: Math.round(Math.random() * 1000),
-    userId: Math.round(Math.random() * 1000),
-    firstName: "",
-    lastName: "",
-    email: "",
-    gender: "",
-    location: "",
-    status: true,
-    specialty: "",
-    about: "",
-  };
+  // ?? means if individualDoctorDetail is undefined or null use initialValue
+  if (individualDoctorDetail) {
+    console.log("using the value from parent component");
+  } else {
+    console.log("using the default values");
+  }
+  let [inputValues, setInputValues] = useState(individualDoctorDetail);
 
-  let [inputValues, setInputValues] = useState(
-    individualDoctorDetail || initialValue
-  );
+  // force the state to be updated when the prop changes
+  useEffect(() => {
+    setInputValues(individualDoctorDetail);
+  }, [individualDoctorDetail]);
 
   function handleChange(
     // < means generic in typescript
@@ -51,11 +66,19 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
     if (event.target.type === "checkbox") {
       if ((event.target as any).checked) {
         // add value to the list
-        newValue = [...existingValue, event.target.value];
+        if (Array.isArray(existingValue)) {
+          newValue = [...existingValue, event.target.value];
+        } else {
+          newValue = event.target.value;
+        }
       } else {
-        newValue = existingValue.filter(
-          (v: string) => v !== event.target.value
-        );
+        if (Array.isArray(existingValue)) {
+          newValue = existingValue.filter(
+            (v: string) => v !== event.target.value
+          );
+        } else {
+          newValue = false;
+        }
       }
     } else {
       newValue = event.target.value;
@@ -90,6 +113,7 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
 
           <FormLabel htmlFor="email">Email</FormLabel>
           <Input
+            type="email"
             id="email"
             placeholder="abcd@gmail.com"
             name="email"
@@ -157,7 +181,15 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
           </Select>
 
           <FormLabel htmlFor="status">Check the status</FormLabel>
-          <Checkbox colorScheme="green">Active</Checkbox>
+          <Checkbox
+            colorScheme="green"
+            value="status"
+            name="status"
+            isChecked={inputValues.status}
+            onChange={handleChange}
+          >
+            Active
+          </Checkbox>
 
           {/* <FormLabel htmlFor="insurance">Insurance accepted</FormLabel> */}
           {/* <CheckboxGroup

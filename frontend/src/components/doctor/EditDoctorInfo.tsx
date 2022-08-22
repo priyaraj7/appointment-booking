@@ -6,32 +6,47 @@ import { useEffect, useState } from "react";
 import { Doctor } from "./DoctorControl"; // type import
 
 function EditDoctorInfo() {
-  // const params = useParams();
-  // const navigate = useNavigate();
-  // if (!params.id) {
-  //   return <div>No Doctor found</div>;
-  // }
-  // const doctorID = parseInt(params.id, 10);
-  // const individualDoctorDetail = fetchIndividualDoctorInfo(doctorID);
-  // if (!individualDoctorDetail) {
-  //   return <div>Doctor not found</div>;
-  // }
-  // return (
-  //   <>
-  //     <Heading>Update Doctor Info</Heading>
-  //     <DoctorForm
-  //       // individualDoctorDetail={individualDoctorDetail}
-  //       onSave={(details: Doctor) => {
-  //         saveIndividualDoctor(details);
-  //         alert(
-  //           `You have successfully edited the ${details.firstName} information`
-  //         );
-  //         navigate("/");
-  //       }}
-  //     />
-  //   </>
-  // );
-  return null;
+  let [individualDoctor, setIndividualDoctor] = useState<Doctor>();
+
+  const params = useParams();
+  const navigate = useNavigate();
+
+  // ! means I know doctor id always exist -- don't give error
+  const doctorID = parseInt(params.id!, 10);
+
+  // get request
+
+  useEffect(() => {
+    const getIndividualDoctor = async () => {
+      const request = await fetch(`/api/doctor/${doctorID}`);
+      const result = (await request.json()) as Doctor;
+
+      console.log(result);
+      setIndividualDoctor(result);
+    };
+
+    getIndividualDoctor();
+  }, []);
+
+  return (
+    <>
+      <Heading>Update Doctor Info</Heading>
+      <DoctorForm
+        individualDoctorDetail={individualDoctor}
+        onSave={async (doc: Doctor) => {
+          await fetch(`/api/doctor/${doctorID}`, {
+            method: "PUT",
+            body: JSON.stringify(doc),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          });
+          navigate("/api/admin");
+        }}
+      />
+    </>
+  );
 }
 
 export default EditDoctorInfo;

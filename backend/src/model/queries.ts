@@ -105,7 +105,7 @@ export const getIndividualDoctorQuery = async (id: number) => {
   user_id as "userId",
   fk_user_id as "fkUserId"
   FROM doctor INNER JOIN users ON doctor.fk_user_id = users.user_id 
-  WHERE doctor.fk_user_id = users.user_id AND doctor.doctor_id =$1`,
+  WHERE doctor.fk_user_id = users.user_id AND doctor.fk_user_id=$1`,
     [id]
   );
 
@@ -115,6 +115,7 @@ export const getIndividualDoctorQuery = async (id: number) => {
 ////////////////////////////////////////////
 // update doctor and user table using transaction'. It will create query automatically. No need of writing query
 export const updateIndividualDoctorQuery = async (
+  // doctorId: number,
   userId: number,
   data: Partial<User & Doctor>
 ) => {
@@ -147,6 +148,7 @@ export const updateIndividualDoctorQuery = async (
       prop: "fk_user_id",
       cnd: true,
     },
+    // { name: "doctor_id", prop: "doctorId" },
     { name: "specialty", skip: (col) => !col.exists },
     { name: "location", skip: (col) => !col.exists },
     { name: "about", skip: (col) => !col.exists },

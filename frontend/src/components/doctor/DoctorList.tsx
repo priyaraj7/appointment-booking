@@ -19,7 +19,6 @@ import { Doctor } from "./DoctorControl";
 
 function DoctorListPage({ doctor = [] }: { doctor?: Doctor[] }) {
   console.log(doctor);
-  let [doctorsList, setDoctorList] = useState(MockDoctorInfo);
 
   // function deleteDoctor(id: number) {
   //   deleteDoctorInfo(id);
@@ -37,7 +36,7 @@ function DoctorListPage({ doctor = [] }: { doctor?: Doctor[] }) {
     return doctor.map((doc) => {
       console.log(doc);
       return (
-        <Tr key={doc.doctorId}>
+        <Tr key={doc.userId}>
           <Td>{`${doc.firstName} ${doc.lastName}`}</Td>
           <Td>{doc.gender}</Td>
           <Td>{doc.specialty}</Td>
@@ -45,7 +44,7 @@ function DoctorListPage({ doctor = [] }: { doctor?: Doctor[] }) {
             {" "}
             <Link
               to={{
-                pathname: `/view-doctor-details/${doc.doctorId}/${doc.lastName}`,
+                pathname: `/view-doctor-details/${doc.userId}/${doc.lastName}`,
               }}
             >
               <Button>Detail</Button>
