@@ -5,13 +5,15 @@
 [About the Project](#about-the-project)  
 [Features of this app](#features-of-this-app)  
 [Technology used](#technology-used-1)  
+[Quick start](#quick-guide)
+[Things to do](#things-to-do)
 [Database diagram](#database-diagram)  
 [App Design/List of APIs](#app-design)  
 [Wire framing](#wire-framing)
 
 ### About the Project
 
-This is fullstack app. Planning to build using react, typescript, node and postgres
+Appointment booking through phone call or at the hospital waste so much time, sometimes we will get frustrated. So I decided to to do this app.
 
 ### Features of this app
 
@@ -37,7 +39,6 @@ This app has two users: Admin and Patients
 
 - nodejs
 - express
-- prisma
 - postgres
 
 **Frontend**
@@ -45,6 +46,36 @@ This app has two users: Admin and Patients
 - React
 - Typescript
 - Chakra UI
+
+### Quick Guide
+
+First, clone the project
+
+move inside the directory
+
+next move into the backend server and install dependencies and start the server
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+Open another terminal then cd into the frontend, install dependencies and start the server
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+If you Navigate to `http://localhost:3000/`, you will get the response from the backend
+
+### Things to do
+
+- [] Validate form
+- [] Need to work on patient component
+- [] Plan to how to show appointment
 
 ### Database diagram
 
@@ -66,7 +97,9 @@ This app has two users: Admin and Patients
 
 Please click [here](https://app.diagrams.net/#G1QRSWzpZixVfFF8Xm8DQCiyJ28nhHi1j6) to see wire-framing
 
-## Resource referred
+### [my google doc](https://docs.google.com/document/d/1AbQ4yE9bygevjJtFQdZpsDyibujahyjKTDW9of3JY8g/edit)
+
+### Resource referred
 
 [pg-promose transaction](https://github.com/vitaly-t/pg-promise/wiki/Learn-by-Example#transactions)
 [Developing a CRUD Node.js Application with PostgreSQL](https://glaucia86.medium.com/developing-a-crud-node-js-application-with-postgresql-d25febb1cc4)
