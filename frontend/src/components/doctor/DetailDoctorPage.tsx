@@ -96,7 +96,7 @@ export default function DetailDoctorPage() {
           }}
         >
           <Button
-            display={"flex"}
+            display="flex"
             justifyContent={"center"}
             alignItems={"center"}
             fontSize={"sm"}
