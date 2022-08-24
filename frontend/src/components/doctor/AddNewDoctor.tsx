@@ -1,7 +1,7 @@
 import DoctorForm from "./DoctorForm";
 import { Heading } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { Doctor } from "./DoctorControl"; // type import
+import type { Doctor } from "./DoctorControl";
 
 function AddNewDoctor({}) {
   // post request
