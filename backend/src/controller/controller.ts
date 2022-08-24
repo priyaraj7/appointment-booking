@@ -32,7 +32,7 @@ export const getAllDoctorDetail = async (req: Request, res: Response) => {
 };
 
 export const getIndividualDoctor = async (req: Request, res: Response) => {
-  let id = Number(req.params.id);
+  const id = Number(req.params.id);
   // let getDoctorInfo = {
   //   firstName: req.body.firstName,
   //   lastName: req.body.lastName,
