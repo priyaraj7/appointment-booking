@@ -30,18 +30,25 @@ export default function DetailDoctorPage() {
   const userId = parseInt(params.id!, 10);
 
   // get request
-
+  // https://beta.reactjs.org/learn/synchronizing-with-effects#fetching-data
+  // you need to add last name to the url
   useEffect(() => {
+    let ignore = false;
     const getIndividualDoctor = async () => {
       const request = await fetch(`/api/doctor/${userId}`);
       const result = (await request.json()) as Doctor;
 
       console.log(result);
-      setIndividualDoctor(result);
+      if (!ignore) {
+        setIndividualDoctor(result);
+      }
     };
 
     getIndividualDoctor();
-  }, []);
+    return () => {
+      ignore = true;
+    };
+  }, [userId]);
 
   return individualDoctor ? (
     <Center py={6}>

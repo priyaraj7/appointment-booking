@@ -41,7 +41,10 @@ const initialValue: Doctor = {
 // } = useForm();
 
 function DoctorForm({ individualDoctorDetail = initialValue, onSave }: Props) {
-  const [isActive, setIsActive] = useState(false);
+  const [prevIndividualDoctorDetail, setPrevIndividualDoctorDetail] = useState(
+    individualDoctorDetail
+  );
+  let [inputValues, setInputValues] = useState(individualDoctorDetail);
   // const navigate = useNavigate();
 
   // ?? means if individualDoctorDetail is undefined or null use initialValue
@@ -50,12 +53,14 @@ function DoctorForm({ individualDoctorDetail = initialValue, onSave }: Props) {
   } else {
     console.log("using the default values");
   }
-  let [inputValues, setInputValues] = useState(individualDoctorDetail);
 
   // force the state to be updated when the prop changes
-  useEffect(() => {
+  // https://beta.reactjs.org/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+
+  if (individualDoctorDetail !== prevIndividualDoctorDetail) {
+    setPrevIndividualDoctorDetail(individualDoctorDetail);
     setInputValues(individualDoctorDetail);
-  }, [individualDoctorDetail]);
+  }
 
   function handleChange(
     // < means generic in typescript

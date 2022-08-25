@@ -12,21 +12,27 @@ function EditDoctorInfo() {
   const navigate = useNavigate();
 
   // ! means I know doctor id always exist -- don't give error
-  const doctorID = parseInt(params.id!, 10);
+  const userId = parseInt(params.id!, 10);
 
   // get request
 
   useEffect(() => {
+    let ignore = false;
     const getIndividualDoctor = async () => {
-      const request = await fetch(`/api/doctor/${doctorID}`);
+      const request = await fetch(`/api/doctor/${userId}`);
       const result = (await request.json()) as Doctor;
 
       console.log(result);
-      setIndividualDoctor(result);
+      if (!ignore) {
+        setIndividualDoctor(result);
+      }
     };
 
     getIndividualDoctor();
-  }, []);
+    return () => {
+      ignore = true;
+    };
+  }, [userId]);
 
   return (
     <>
@@ -34,7 +40,7 @@ function EditDoctorInfo() {
       <DoctorForm
         individualDoctorDetail={individualDoctor}
         onSave={async (doc: Doctor) => {
-          await fetch(`/api/doctor/${doctorID}`, {
+          await fetch(`/api/doctor/${userId}`, {
             method: "PUT",
             body: JSON.stringify(doc),
             headers: {
