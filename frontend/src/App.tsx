@@ -12,6 +12,7 @@ import PatientFrontPage from "./components/patient/PatientsFrontPage";
 import PatientsDoctorListPage from "./components/patient/PatientsDoctorListPage";
 import BookAppointmentPage from "./components/patient/BookAppointmentPage";
 import DoctorControl from "./components/doctor/DoctorControl";
+import PageNotFound from "./components/PageNotFound";
 function App() {
   return (
     <ChakraProvider>
@@ -37,6 +38,9 @@ function App() {
         />
         {/* <Route path="/book-appointment" element={<BookAppointmentPage />} /> */}
         <Route path="/book-appointment/:id" element={<BookAppointmentPage />} />
+
+        {/* 👇️ only match this when no other routes match */}
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </ChakraProvider>
   );

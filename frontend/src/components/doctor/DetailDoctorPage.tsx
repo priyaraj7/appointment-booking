@@ -1,5 +1,5 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { MockDoctorInfo } from "../../Mocks/DoctorList";
 
 import {
   Heading,
@@ -10,101 +10,82 @@ import {
   Stack,
   Button,
   Flex,
+  Spinner,
 } from "@chakra-ui/react";
-import { fetchIndividualDoctorInfo } from "../api/FetchData";
 
-export type DoctorDetail = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  gender: string;
-  location: string;
-  insurance: string[];
-  days_available: string[];
-  speciality: string;
-  about: string;
-};
+import { Doctor } from "./DoctorControl"; // type import
+
+// export default function DetailDoctorPage({
+//   individualDoctor,
+// }: {
+//   individualDoctor?: Doctor;
+// })
 
 export default function DetailDoctorPage() {
+  let [individualDoctor, setIndividualDoctor] = useState<Doctor>();
+
   const params = useParams();
-  if (!params.id) {
-    return <div>No Doctor found</div>;
-  }
-  const doctorID = parseInt(params.id, 10);
 
-  const state = fetchIndividualDoctorInfo(doctorID);
-  if (!state) {
-    return <div>Doctor not found</div>;
-  }
+  // ! means I know doctor id always exist -- don't give error
+  const userId = parseInt(params.id!, 10);
 
-  return (
+  // get request
+  // https://beta.reactjs.org/learn/synchronizing-with-effects#fetching-data
+  // you need to add last name to the url
+  useEffect(() => {
+    let ignore = false;
+    const getIndividualDoctor = async () => {
+      const request = await fetch(`/api/doctor/${userId}`);
+      const result = (await request.json()) as Doctor;
+
+      console.log(result);
+      if (!ignore) {
+        setIndividualDoctor(result);
+      }
+    };
+
+    getIndividualDoctor();
+    return () => {
+      ignore = true;
+    };
+  }, [userId]);
+
+  return individualDoctor ? (
     <Center py={6}>
       <Box
-        maxW={"320px"}
-        w={"full"}
+        // maxW={"320px"}
+        // w={"full"}
         // bg={useColorModeValue("white", "gray.900")}
         boxShadow={"2xl"}
         rounded={"lg"}
         p={6}
       >
-        {/* <Avatar
-          size={"xl"}
-          src={
-            "https://images.unsplash.com/photo-1520810627419-35e362c5dc07?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-          }
-          alt={"Avatar Alt"}
-          mb={4}
-          pos={"relative"}
-          _after={{
-            content: '""',
-            w: 4,
-            h: 4,
-            bg: "green.300",
-            border: "2px solid white",
-            rounded: "full",
-            pos: "absolute",
-            bottom: 0,
-            right: 3,
-          }}
-        /> */}
         <Heading fontSize={"2xl"} fontFamily={"body"} textAlign={"center"}>
-          {state.first_name} {state.last_name}
+          {individualDoctor.firstName} {individualDoctor.lastName}
         </Heading>
         <Text fontWeight={600} color={"gray.500"} mb={4} textAlign={"center"}>
-          {state.email}
+          {individualDoctor.email}
         </Text>
         <Text
         // color={useColorModeValue("gray.700", "gray.400")}
         >
           <Text as="span" fontWeight="semibold">
-            About me:
+            About:
           </Text>
-          {state.about}
+          {individualDoctor.about}
         </Text>
+
         <Flex>
-          {" "}
-          <Text fontWeight="semibold">Insurance:</Text>
-          <Text>{state.insurance}</Text>
-        </Flex>
-        <Flex>
-          <Text fontWeight="semibold">Speciality:</Text>
-          <Text>{state.speciality}</Text>
+          <Text fontWeight="semibold">Specialty:</Text>
+          <Text>{individualDoctor.specialty}</Text>
         </Flex>
 
         <Text>
           {" "}
           <Text as="span" fontWeight="semibold">
-            Available Days:
-          </Text>
-          {state.days_available}
-        </Text>
-        <Text>
-          {" "}
-          <Text as="span" fontWeight="semibold">
             Gender:
           </Text>
-          {state.gender}
+          {individualDoctor.gender}
         </Text>
 
         <Text>
@@ -112,31 +93,36 @@ export default function DetailDoctorPage() {
           <Text as="span" fontWeight="semibold">
             Location:
           </Text>
-          {state.location}
+          {individualDoctor.location}
         </Text>
 
-        <Stack mt={8} direction={"row"} spacing={4}>
-          <Link
-            to={{
-              pathname: `/edit-doctor-details/${state.id}/${state.last_name}`,
+        {/* <Stack mt={8} direction={"row"} spacing={4}> */}
+        <Link
+          to={{
+            pathname: `/edit-doctor-details/${individualDoctor.userId}/${individualDoctor.lastName}`,
+          }}
+        >
+          <Button
+            display="flex"
+            justifyContent={"center"}
+            alignItems={"center"}
+            fontSize={"sm"}
+            rounded={"full"}
+            bg={"tomato"}
+            boxShadow={
+              "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+            }
+            _hover={{
+              bg: "red.500",
+            }}
+            _focus={{
+              bg: "red.500",
             }}
           >
-            <Button
-              flex={1}
-              fontSize={"sm"}
-              rounded={"full"}
-              bg={"green"}
-              _hover={{
-                bg: "green.500",
-              }}
-              _focus={{
-                bg: "green.500",
-              }}
-            >
-              Edit
-            </Button>
-          </Link>
-          <Button
+            Edit
+          </Button>
+        </Link>
+        {/* <Button
             flex={1}
             fontSize={"sm"}
             rounded={"full"}
@@ -152,9 +138,17 @@ export default function DetailDoctorPage() {
             }}
           >
             Delete
-          </Button>
-        </Stack>
+          </Button> */}
+        {/* </Stack> */}
       </Box>
     </Center>
+  ) : (
+    <Spinner
+      thickness="4px"
+      speed="0.65s"
+      emptyColor="gray.200"
+      color="blue.500"
+      size="xl"
+    />
   );
 }

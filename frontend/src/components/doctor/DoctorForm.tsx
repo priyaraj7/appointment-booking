@@ -10,36 +10,57 @@ import {
   Heading,
   Button,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 
-import { useState } from "react";
-
-import { DoctorDetail } from "./DetailDoctorPage";
+import { useEffect, useState } from "react";
+import { Doctor } from "./DoctorControl"; // type import
+import { useForm } from "react-hook-form";
 
 type Props = {
-  individualDoctorDetail?: DoctorDetail;
-  onSave: (details: DoctorDetail) => void;
+  individualDoctorDetail?: Doctor;
+  onSave: (details: Doctor) => void;
 };
 
-function DoctorForm({ individualDoctorDetail, onSave }: Props) {
-  const navigate = useNavigate();
+const initialValue: Doctor = {
+  doctorId: Math.round(Math.random() * 1000), // need to work on these 3"
+  fkUserId: Math.round(Math.random() * 1000),
+  userId: Math.round(Math.random() * 1000),
+  firstName: "",
+  lastName: "",
+  email: "",
+  gender: "",
+  location: "",
+  status: true,
+  specialty: "",
+  about: "",
+};
 
-  const initialValue: DoctorDetail = {
-    id: Math.round(Math.random() * 1000),
-    first_name: "",
-    last_name: "",
-    email: "",
-    gender: "",
-    location: "",
-    insurance: [],
-    days_available: [],
-    speciality: "",
-    about: "",
-  };
+// const {
+//   register,
+//   handleSubmit,
+//   formState: { errors },
+// } = useForm();
 
-  let [inputValues, setInputValues] = useState(
-    individualDoctorDetail || initialValue
+function DoctorForm({ individualDoctorDetail = initialValue, onSave }: Props) {
+  const [prevIndividualDoctorDetail, setPrevIndividualDoctorDetail] = useState(
+    individualDoctorDetail
   );
+  let [inputValues, setInputValues] = useState(individualDoctorDetail);
+  // const navigate = useNavigate();
+
+  // ?? means if individualDoctorDetail is undefined or null use initialValue
+  if (individualDoctorDetail) {
+    console.log("using the value from parent component");
+  } else {
+    console.log("using the default values");
+  }
+
+  // force the state to be updated when the prop changes
+  // https://beta.reactjs.org/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+
+  if (individualDoctorDetail !== prevIndividualDoctorDetail) {
+    setPrevIndividualDoctorDetail(individualDoctorDetail);
+    setInputValues(individualDoctorDetail);
+  }
 
   function handleChange(
     // < means generic in typescript
@@ -50,11 +71,19 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
     if (event.target.type === "checkbox") {
       if ((event.target as any).checked) {
         // add value to the list
-        newValue = [...existingValue, event.target.value];
+        if (Array.isArray(existingValue)) {
+          newValue = [...existingValue, event.target.value];
+        } else {
+          newValue = event.target.value;
+        }
       } else {
-        newValue = existingValue.filter(
-          (v: string) => v !== event.target.value
-        );
+        if (Array.isArray(existingValue)) {
+          newValue = existingValue.filter(
+            (v: string) => v !== event.target.value
+          );
+        } else {
+          newValue = false;
+        }
       }
     } else {
       newValue = event.target.value;
@@ -71,24 +100,25 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
         <FormControl isRequired>
           <FormLabel htmlFor="first-name">First name</FormLabel>
           <Input
-            id="first-name"
+            id="firstName"
             placeholder="First name"
-            name="first_name"
-            value={inputValues.first_name}
+            name="firstName"
+            value={inputValues.firstName}
             onChange={handleChange}
           />
 
           <FormLabel htmlFor="last-name">Last name</FormLabel>
           <Input
-            id="last-name"
+            id="lastName"
             placeholder="Last name"
-            name="last_name"
-            value={inputValues.last_name}
+            name="lastName"
+            value={inputValues.lastName}
             onChange={handleChange}
           />
 
           <FormLabel htmlFor="email">Email</FormLabel>
           <Input
+            type="email"
             id="email"
             placeholder="abcd@gmail.com"
             name="email"
@@ -96,19 +126,19 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
             onChange={handleChange}
           />
 
-          <FormLabel htmlFor="speciality">Speciality</FormLabel>
+          <FormLabel htmlFor="specialty">specialty</FormLabel>
           <Input
-            id="speciality"
-            placeholder="Speciality"
-            name="speciality"
-            value={inputValues.speciality}
+            id="specialty"
+            placeholder="specialty"
+            name="specialty"
+            value={inputValues.specialty}
             onChange={handleChange}
           />
 
-          <FormLabel htmlFor="days-available">
+          {/* <FormLabel htmlFor="days-available">
             Select the available days of the week
-          </FormLabel>
-          <CheckboxGroup
+          </FormLabel> */}
+          {/* <CheckboxGroup
             defaultValue={inputValues.days_available}
             colorScheme="green"
           >
@@ -131,7 +161,7 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
                 }
               )}
             </Stack>
-          </CheckboxGroup>
+          </CheckboxGroup> */}
 
           <FormLabel htmlFor="location">Location</FormLabel>
           <Input
@@ -142,7 +172,7 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
             onChange={handleChange}
           />
 
-          <FormLabel htmlFor="country">Gender</FormLabel>
+          <FormLabel htmlFor="gender">Gender</FormLabel>
           <Select
             id="gender"
             placeholder="Select gender"
@@ -155,8 +185,19 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
             <option>Others</option>
           </Select>
 
-          <FormLabel htmlFor="insurance">Insurance accepted</FormLabel>
-          <CheckboxGroup
+          <FormLabel htmlFor="status">Check the status</FormLabel>
+          <Checkbox
+            colorScheme="green"
+            value="status"
+            name="status"
+            isChecked={inputValues.status}
+            onChange={handleChange}
+          >
+            Active
+          </Checkbox>
+
+          {/* <FormLabel htmlFor="insurance">Insurance accepted</FormLabel> */}
+          {/* <CheckboxGroup
             colorScheme="green"
             defaultValue={inputValues.insurance}
           >
@@ -185,7 +226,7 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
                 );
               })}
             </Stack>
-          </CheckboxGroup>
+          </CheckboxGroup> */}
 
           <FormLabel htmlFor="email">About</FormLabel>
           <Input
@@ -211,14 +252,3 @@ function DoctorForm({ individualDoctorDetail, onSave }: Props) {
 }
 
 export default DoctorForm;
-
-{
-  /* <FormLabel htmlFor="id">id</FormLabel>
-          <Input
-            id="id"
-            placeholder="Id"
-            name="id"
-            value={inputValues.id.toString()}
-            onChange={handleChange}
-          /> */
-}

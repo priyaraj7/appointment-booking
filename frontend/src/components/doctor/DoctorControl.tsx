@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import DoctorListPage from "./DoctorList";
+import AddNewDoctor from "./AddNewDoctor";
+import DetailDoctorPage from "./DetailDoctorPage";
+import EditDoctorInfo from "./EditDoctorInfo";
+
+import { useParams, Link } from "react-router-dom";
 
 export type Doctor = {
   doctorId: number;
@@ -10,12 +15,17 @@ export type Doctor = {
   email: string;
   gender: string;
   location: string;
-  speciality: string;
+  specialty: string;
+  status: boolean;
+  about: string;
 };
 
 const DoctorControl = () => {
   let [doctor, setDoctor] = useState<Doctor[]>([]);
 
+  const params = useParams();
+
+  // get request
   useEffect(() => {
     const getAllDoctor = async () => {
       const request = await fetch("/api/admin");
@@ -27,16 +37,12 @@ const DoctorControl = () => {
     getAllDoctor();
   }, []);
 
-  // const listDoctor = doctor.map((doc: any) => {
-  //   return (
-  //     <li key={doc.id}>
-  //       {doc.first_name}
-  //       {/* ID: {doc.id} NAME:{doc.firstName} EMAIL:{doc.email} */}
-  //     </li>
-  //   );
-  // });
-
-  return <DoctorListPage doctor={doctor} />;
+  return (
+    <>
+      <DoctorListPage doctor={doctor} />
+      {/* <AddNewDoctor addDoctorOnSubmit={addDoctorOnSubmit} /> */}
+    </>
+  );
 };
 
 export default DoctorControl;

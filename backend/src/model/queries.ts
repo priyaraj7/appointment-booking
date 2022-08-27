@@ -13,7 +13,7 @@ export type Doctor = {
   specialty: string;
   location: string;
   about: string;
-  active: boolean;
+  status: boolean;
 };
 
 export type Patient = {
@@ -34,10 +34,10 @@ export const getAllDoctorDetailQuery = async () => {
   const result = await db.query(
     `SELECT 
       doctor_id as "doctorId",
-      speciality,
+      specialty,
       location,
       about,
-      active,
+      status,
       first_name as "firstName",
       last_name as "lastName",
       email,
@@ -49,9 +49,73 @@ export const getAllDoctorDetailQuery = async () => {
   return result;
 };
 
+// export const getIndividualDoctorQuery = async (userId: number,
+//   data: Partial<User & Doctor>) => {
+
+//     const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
+//       {
+//         name: "user_id",
+//         cnd: true,
+//         prop: "userId",
+//         skip: (col) => !col.exists,
+//       },
+//       {
+//         name: "first_name",
+//         prop: "firstName",
+//         skip: (col) => !col.exists,
+//       },
+//       { name: "last_name", prop: "lastName", skip: (col) => !col.exists },
+//       { name: "email", skip: (col) => !col.exists },
+//       { name: "gender", skip: (col) => !col.exists },
+//     ]);
+
+//     const doctorTableColumn = new pgp.helpers.ColumnSet([
+//       {
+//         name: "fk_user_id",
+//         prop: "fk_user_id",
+//         cnd: true,
+//       },
+//       { name: "specialty", skip: (col) => !col.exists },
+//       { name: "location", skip: (col) => !col.exists },
+//       { name: "about", skip: (col) => !col.exists },
+//       { name: "status", skip: (col) => !col.exists },
+//     ]);
+
+//     const getUserInfo = pgp.as.format(" WHERE user_id = ${userId}", {
+//       userId,
+//     });
+//     const getDoctorInfo = pgp.as.format(" WHERE fk_user_id = ${userId}", {
+//       userId,
+//     });
+
+// }
+
+export const getIndividualDoctorQuery = async (id: number) => {
+  const result = await db.one(
+    `SELECT 
+  doctor_id as "doctorId",
+  specialty,
+  location,
+  about,
+  status,
+  first_name as "firstName",
+  last_name as "lastName",
+  email,
+  gender,
+  user_id as "userId",
+  fk_user_id as "fkUserId"
+  FROM doctor INNER JOIN users ON doctor.fk_user_id = users.user_id 
+  WHERE doctor.fk_user_id = users.user_id AND doctor.fk_user_id=$1`,
+    [id]
+  );
+
+  return result;
+};
+
 ////////////////////////////////////////////
 // update doctor and user table using transaction'. It will create query automatically. No need of writing query
 export const updateIndividualDoctorQuery = async (
+  // doctorId: number,
   userId: number,
   data: Partial<User & Doctor>
 ) => {
@@ -84,10 +148,11 @@ export const updateIndividualDoctorQuery = async (
       prop: "fk_user_id",
       cnd: true,
     },
-    { name: "speciality", skip: (col) => !col.exists },
+    // { name: "doctor_id", prop: "doctorId" },
+    { name: "specialty", skip: (col) => !col.exists },
     { name: "location", skip: (col) => !col.exists },
     { name: "about", skip: (col) => !col.exists },
-    { name: "active", skip: (col) => !col.exists },
+    { name: "status", skip: (col) => !col.exists },
   ]);
 
   const updateUserCondition = pgp.as.format(" WHERE user_id = ${userId}", {
@@ -154,10 +219,10 @@ export const insertDoctorAndUserInfo = async (data: CreateDoctorInput) => {
       prop: "fk_user_id",
       cnd: true,
     },
-    { prop: "specialty", name: "speciality" },
+    { prop: "specialty", name: "specialty" },
     { name: "location" },
     { name: "about" },
-    { name: "active" },
+    { name: "status" },
   ]);
 
   const insertUserData = pgp.helpers.insert(data, userTableColumn, "users");

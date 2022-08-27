@@ -1,40 +1,54 @@
 import DoctorForm from "./DoctorForm";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  fetchIndividualDoctorInfo,
-  saveIndividualDoctor,
-} from "../api/FetchData";
+
 import { Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { DoctorDetail } from "./DetailDoctorPage";
+import { Doctor } from "./DoctorControl"; // type import
 
 function EditDoctorInfo() {
+  let [individualDoctor, setIndividualDoctor] = useState<Doctor>();
+
   const params = useParams();
   const navigate = useNavigate();
 
-  if (!params.id) {
-    return <div>No Doctor found</div>;
-  }
+  // ! means I know doctor id always exist -- don't give error
+  const userId = parseInt(params.id!, 10);
 
-  const doctorID = parseInt(params.id, 10);
+  // get request
 
-  const individualDoctorDetail = fetchIndividualDoctorInfo(doctorID);
+  useEffect(() => {
+    let ignore = false;
+    const getIndividualDoctor = async () => {
+      const request = await fetch(`/api/doctor/${userId}`);
+      const result = (await request.json()) as Doctor;
 
-  if (!individualDoctorDetail) {
-    return <div>Doctor not found</div>;
-  }
+      console.log(result);
+      if (!ignore) {
+        setIndividualDoctor(result);
+      }
+    };
+
+    getIndividualDoctor();
+    return () => {
+      ignore = true;
+    };
+  }, [userId]);
 
   return (
     <>
       <Heading>Update Doctor Info</Heading>
       <DoctorForm
-        individualDoctorDetail={individualDoctorDetail}
-        onSave={(details: DoctorDetail) => {
-          saveIndividualDoctor(details);
-          alert(
-            `You have successfully edited the ${details.first_name} information`
-          );
-          navigate("/");
+        individualDoctorDetail={individualDoctor}
+        onSave={async (doc: Doctor) => {
+          await fetch(`/api/doctor/${userId}`, {
+            method: "PUT",
+            body: JSON.stringify(doc),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          });
+          navigate("/api/admin");
         }}
       />
     </>
