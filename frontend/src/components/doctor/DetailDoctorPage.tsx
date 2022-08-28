@@ -13,7 +13,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 
-import { Doctor } from "./DoctorControl"; // type import
+import type { Doctor } from "./DoctorControl"; // type import
 
 // export default function DetailDoctorPage({
 //   individualDoctor,

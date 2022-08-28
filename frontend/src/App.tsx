@@ -1,11 +1,11 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
-import { Container } from "@chakra-ui/react";
+
 import DoctorListPage from "./components/doctor/DoctorList";
-import AdminProfilePage from "./components/admin/AdminProfile";
+
 import DetailDoctorPage from "./components/doctor/DetailDoctorPage";
-import DoctorForm from "./components/doctor/DoctorForm";
+
 import EditDoctorInfo from "./components/doctor/EditDoctorInfo";
 import AddNewDoctor from "./components/doctor/AddNewDoctor";
 import PatientFrontPage from "./components/patient/PatientsFrontPage";
