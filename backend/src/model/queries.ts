@@ -21,12 +21,25 @@ export type Patient = {
   address: string;
   phoneNumber: string;
 };
-// take all type from user and doctor make takeout userId or doctorId
+
+export type Appointment = {
+  // appointmentId: number;
+  // fkDoctorId: number;
+  // fkPatientId: number;
+  startTime: Date;
+  endTime: Date;
+};
+// take all type from user and doctor make takeout userId or doctorId (readonly)
 export type CreateDoctorInput = Omit<User & Doctor, "userId" | "doctorId">;
 
 export type CreatePatientInput = Omit<User & Patient, "userId" | "patientId">;
 
 export type UpdatePatientInput = Partial<Omit<User, "userId"> & Patient>;
+
+// export type AppointmentInput = Omit<
+//   User & Doctor & Patient & Appointment,
+//   "userId" | "doctorId" | "patientId" | "appointmentId"
+// >;
 
 //       CRUD Functionality      //
 
@@ -363,3 +376,90 @@ export const addingPatientAndUserInfo = async (data: CreatePatientInput) => {
     return { ...userRow, ...PatientRow };
   });
 };
+
+// Appointment Table
+// ...................   insert appointment   ...................
+
+// export const insertAppointment = async (data: CreateDoctorInput, ) => {
+//   const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
+//     {
+//       name: "first_name",
+//       prop: "firstName",
+//     },
+//     { name: "last_name", prop: "lastName", skip: (col) => !col.exists },
+//     { name: "email" },
+//     { name: "gender" },
+//   ]);
+
+//   const doctorTableColumn = new pgp.helpers.ColumnSet([
+//     {
+//       name: "fk_user_id",
+//       prop: "fk_user_id",
+//       cnd: true,
+//     },
+//     { prop: "specialty", name: "specialty" },
+//     { name: "location" },
+//     { name: "about" },
+//     { name: "status" },
+//   ]);
+
+//   const insertUserData = pgp.helpers.insert(data, userTableColumn, "users");
+
+//   return db.tx("insertDoctor", async (t) => {
+//     const userRow = await t.one(insertUserData + " RETURNING *");
+//     //const userId = await t.one<User>(insertUserData + " RETURNING user_id");
+//     console.log(userRow);
+//     //console.log(userId);
+//     const insertDoctorData =
+//       pgp.helpers.insert(
+//         { ...data, fk_user_id: userRow.user_id },
+//         doctorTableColumn,
+//         "doctor"
+//       ) + " RETURNING *";
+//     console.log(insertDoctorData);
+//     const doctorRow = await t.one(insertDoctorData);
+//     return { ...userRow, ...doctorRow };
+//   });
+// };
+
+export const insertAppointment = async (
+  data: Appointment,
+  doctorId: number,
+  patientId: number
+) => {
+  const result = await db.query(
+    "INSERT INTO appointment(fk_patient_id, fk_doctor_id, start_time,  end_time ) VALUES ($1, $2, $3, $4) RETURNING *",
+    [patientId, doctorId, data.startTime, data.endTime]
+  );
+  return result;
+};
+
+// https://stackoverflow.com/questions/17407481/check-if-a-time-is-between-two-times-time-datatype
+// some what not working
+export const checkForConflict = async (
+  doctorId: number,
+  startTime: Date,
+  endTime: Date
+) => {
+  const result = await db.one(
+    "SELECT * count(id) from appointment WHERE fk_doctor_id=19 AND start_time BETWEEN $2 AND $3 AND end_time BETWEEN $2 AND $3;",
+    [doctorId, startTime, endTime]
+  );
+
+  if (result.count == "0") {
+    return false;
+  }
+  return true;
+};
+
+// https://dirask.com/posts/Node-js-PostgreSQL-Delete-query-D9q3dD
+
+// DELETE
+export const deleteAppointmentQuery = async (appointmentId: number) => {
+  const result = await db.query(`DELETE FROM appointment WHERE id= $1`, [
+    appointmentId,
+  ]);
+  return result;
+};
+
+//UPDATE

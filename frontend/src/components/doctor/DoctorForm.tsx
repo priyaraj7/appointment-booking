@@ -3,17 +3,13 @@ import {
   FormLabel,
   Select,
   Input,
-  CheckboxGroup,
   Checkbox,
-  Stack,
   Container,
-  Heading,
   Button,
 } from "@chakra-ui/react";
 
-import { useEffect, useState } from "react";
-import { Doctor } from "./DoctorControl"; // type import
-import { useForm } from "react-hook-form";
+import { useState } from "react";
+import type { Doctor } from "./DoctorControl";
 
 type Props = {
   individualDoctorDetail?: Doctor;
@@ -33,12 +29,6 @@ const initialValue: Doctor = {
   specialty: "",
   about: "",
 };
-
-// const {
-//   register,
-//   handleSubmit,
-//   formState: { errors },
-// } = useForm();
 
 function DoctorForm({ individualDoctorDetail = initialValue, onSave }: Props) {
   const [prevIndividualDoctorDetail, setPrevIndividualDoctorDetail] = useState(

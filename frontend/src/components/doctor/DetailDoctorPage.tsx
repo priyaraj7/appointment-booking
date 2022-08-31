@@ -3,23 +3,15 @@ import { useParams, Link } from "react-router-dom";
 
 import {
   Heading,
-  Avatar,
   Box,
   Center,
   Text,
-  Stack,
   Button,
   Flex,
   Spinner,
 } from "@chakra-ui/react";
 
 import type { Doctor } from "./DoctorControl"; // type import
-
-// export default function DetailDoctorPage({
-//   individualDoctor,
-// }: {
-//   individualDoctor?: Doctor;
-// })
 
 export default function DetailDoctorPage() {
   let [individualDoctor, setIndividualDoctor] = useState<Doctor>();
@@ -131,7 +123,7 @@ export default function DetailDoctorPage() {
               "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
             }
             _hover={{
-              bg: "red.500",
+              bg: "red.500",q
             }}
             _focus={{
               bg: "red.500",

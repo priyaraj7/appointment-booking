@@ -21,3 +21,13 @@ export const postDoctor = async (addDoctor: Doctor) => {
     return error;
   }
 };
+
+// export  const getIndividualDoctor = async () => {
+//   const request = await fetch(`/api/doctor/${userId}`);
+//   const result = (await request.json()) as Doctor;
+
+//   console.log(result);
+//   if (!ignore) {
+//     setIndividualDoctor(result);
+//   }
+// };

@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
 import DoctorListPage from "./DoctorList";
-import AddNewDoctor from "./AddNewDoctor";
-import DetailDoctorPage from "./DetailDoctorPage";
-import EditDoctorInfo from "./EditDoctorInfo";
-
-import { useParams, Link } from "react-router-dom";
 
 export type Doctor = {
   doctorId: number;
@@ -23,8 +18,6 @@ export type Doctor = {
 const DoctorControl = () => {
   let [doctor, setDoctor] = useState<Doctor[]>([]);
 
-  const params = useParams();
-
   // get request
   useEffect(() => {
     const getAllDoctor = async () => {
@@ -40,7 +33,6 @@ const DoctorControl = () => {
   return (
     <>
       <DoctorListPage doctor={doctor} />
-      {/* <AddNewDoctor addDoctorOnSubmit={addDoctorOnSubmit} /> */}
     </>
   );
 };
