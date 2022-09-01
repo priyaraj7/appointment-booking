@@ -11,6 +11,8 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 
+import { getIndividualDoctor } from "../../api/doctor";
+
 import type { Doctor } from "./DoctorControl"; // type import
 
 export default function DetailDoctorPage() {
@@ -24,22 +26,9 @@ export default function DetailDoctorPage() {
   // get request
   // https://beta.reactjs.org/learn/synchronizing-with-effects#fetching-data
   // you need to add last name to the url
+
   useEffect(() => {
-    let ignore = false;
-    const getIndividualDoctor = async () => {
-      const request = await fetch(`/api/doctor/${userId}`);
-      const result = (await request.json()) as Doctor;
-
-      console.log(result);
-      if (!ignore) {
-        setIndividualDoctor(result);
-      }
-    };
-
-    getIndividualDoctor();
-    return () => {
-      ignore = true;
-    };
+    (async () => setIndividualDoctor(await getIndividualDoctor(userId)))();
   }, [userId]);
 
   return individualDoctor ? (

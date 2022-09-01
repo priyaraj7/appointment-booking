@@ -62,47 +62,6 @@ export const getAllDoctorDetailQuery = async () => {
   return result;
 };
 
-// export const getIndividualDoctorQuery = async (userId: number,
-//   data: Partial<User & Doctor>) => {
-
-//     const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
-//       {
-//         name: "user_id",
-//         cnd: true,
-//         prop: "userId",
-//         skip: (col) => !col.exists,
-//       },
-//       {
-//         name: "first_name",
-//         prop: "firstName",
-//         skip: (col) => !col.exists,
-//       },
-//       { name: "last_name", prop: "lastName", skip: (col) => !col.exists },
-//       { name: "email", skip: (col) => !col.exists },
-//       { name: "gender", skip: (col) => !col.exists },
-//     ]);
-
-//     const doctorTableColumn = new pgp.helpers.ColumnSet([
-//       {
-//         name: "fk_user_id",
-//         prop: "fk_user_id",
-//         cnd: true,
-//       },
-//       { name: "specialty", skip: (col) => !col.exists },
-//       { name: "location", skip: (col) => !col.exists },
-//       { name: "about", skip: (col) => !col.exists },
-//       { name: "status", skip: (col) => !col.exists },
-//     ]);
-
-//     const getUserInfo = pgp.as.format(" WHERE user_id = ${userId}", {
-//       userId,
-//     });
-//     const getDoctorInfo = pgp.as.format(" WHERE fk_user_id = ${userId}", {
-//       userId,
-//     });
-
-// }
-
 export const getIndividualDoctorQuery = async (id: number) => {
   const result = await db.one(
     `SELECT 
@@ -380,48 +339,6 @@ export const addingPatientAndUserInfo = async (data: CreatePatientInput) => {
 // Appointment Table
 // ...................   insert appointment   ...................
 
-// export const insertAppointment = async (data: CreateDoctorInput, ) => {
-//   const userTableColumn = new pgp.helpers.ColumnSet<Partial<User>>([
-//     {
-//       name: "first_name",
-//       prop: "firstName",
-//     },
-//     { name: "last_name", prop: "lastName", skip: (col) => !col.exists },
-//     { name: "email" },
-//     { name: "gender" },
-//   ]);
-
-//   const doctorTableColumn = new pgp.helpers.ColumnSet([
-//     {
-//       name: "fk_user_id",
-//       prop: "fk_user_id",
-//       cnd: true,
-//     },
-//     { prop: "specialty", name: "specialty" },
-//     { name: "location" },
-//     { name: "about" },
-//     { name: "status" },
-//   ]);
-
-//   const insertUserData = pgp.helpers.insert(data, userTableColumn, "users");
-
-//   return db.tx("insertDoctor", async (t) => {
-//     const userRow = await t.one(insertUserData + " RETURNING *");
-//     //const userId = await t.one<User>(insertUserData + " RETURNING user_id");
-//     console.log(userRow);
-//     //console.log(userId);
-//     const insertDoctorData =
-//       pgp.helpers.insert(
-//         { ...data, fk_user_id: userRow.user_id },
-//         doctorTableColumn,
-//         "doctor"
-//       ) + " RETURNING *";
-//     console.log(insertDoctorData);
-//     const doctorRow = await t.one(insertDoctorData);
-//     return { ...userRow, ...doctorRow };
-//   });
-// };
-
 export const insertAppointment = async (
   data: Appointment,
   doctorId: number,
@@ -442,7 +359,7 @@ export const checkForConflict = async (
   endTime: Date
 ) => {
   const result = await db.one(
-    "SELECT * count(id) from appointment WHERE fk_doctor_id=19 AND start_time BETWEEN $2 AND $3 AND end_time BETWEEN $2 AND $3;",
+    "SELECT  count(id) from appointment WHERE fk_doctor_id=19 AND start_time BETWEEN $2 AND $3 AND end_time BETWEEN $2 AND $3;",
     [doctorId, startTime, endTime]
   );
 
@@ -462,4 +379,4 @@ export const deleteAppointmentQuery = async (appointmentId: number) => {
   return result;
 };
 
-//UPDATE
+//get all appointment
