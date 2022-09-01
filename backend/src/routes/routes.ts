@@ -26,6 +26,7 @@ router.post("/patient", addNewPatient);
 
 router.put("/patient/:id", updatePatientInfo);
 
+
 // Appointment
 router.post("/doctor/:id/appointment", addNewAppointment);
 

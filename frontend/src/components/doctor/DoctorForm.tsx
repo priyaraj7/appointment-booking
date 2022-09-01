@@ -8,8 +8,10 @@ import {
   Button,
 } from "@chakra-ui/react";
 
+
 import { useState } from "react";
 import type { Doctor } from "./DoctorControl";
+
 
 type Props = {
   individualDoctorDetail?: Doctor;
@@ -29,6 +31,7 @@ const initialValue: Doctor = {
   specialty: "",
   about: "",
 };
+
 
 function DoctorForm({ individualDoctorDetail = initialValue, onSave }: Props) {
   const [prevIndividualDoctorDetail, setPrevIndividualDoctorDetail] = useState(

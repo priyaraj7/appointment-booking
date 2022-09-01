@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+
 import {
   Heading,
   Button,
@@ -14,6 +15,7 @@ import { Doctor } from "./DoctorControl";
 
 function DoctorListPage({ doctor = [] }: { doctor?: Doctor[] }) {
   console.log(doctor);
+
 
   // Table header
   function renderHeader() {
