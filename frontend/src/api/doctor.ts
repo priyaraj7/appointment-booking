@@ -6,6 +6,14 @@ const commonRequestOptions = {
   },
 };
 
+export const getAllDoctor = async () => {
+  const request = await fetch("/api/admin");
+  const result = await request.json();
+
+  //console.log(result);
+  return result;
+};
+
 export const postDoctor = async (addDoctor: Doctor) => {
   const requestOptions = {
     ...commonRequestOptions,
