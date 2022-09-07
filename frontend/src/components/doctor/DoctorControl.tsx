@@ -27,14 +27,22 @@ const DoctorControl = () => {
 
   // get request
   useEffect(() => {
+    let ignore = false;
     const getAllDoctor = async () => {
       const request = await fetch("/api/admin");
       const result = (await request.json()) as Doctor[];
 
       console.log(result);
-      setDoctor(result);
+      console.log(result);
+      if (!ignore) {
+        setDoctor(result);
+      }
+      
     };
     getAllDoctor();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   return (
