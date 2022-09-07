@@ -1,13 +1,9 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { MockDoctorInfo } from "../../Mocks/DoctorList";
+
 
 import {
   Heading,
-  Box,
-  Text,
   Button,
-  Flex,
   Table,
   Thead,
   Tbody,
@@ -20,11 +16,6 @@ import { Doctor } from "./DoctorControl";
 function DoctorListPage({ doctor = [] }: { doctor?: Doctor[] }) {
   console.log(doctor);
 
-  // function deleteDoctor(id: number) {
-  //   deleteDoctorInfo(id);
-
-  //   setDoctorList(MockDoctorInfo);
-  // }
 
   // Table header
   function renderHeader() {
@@ -50,6 +41,16 @@ function DoctorListPage({ doctor = [] }: { doctor?: Doctor[] }) {
               <Button>Detail</Button>
             </Link>
           </Td>
+          {/* <Td>
+            {" "}
+            <Link
+              to={{
+                pathname: `/book-appointment/${doc.userId}/${doc.lastName}`,
+              }}
+            >
+              <Button>Book Appointment</Button>
+            </Link>
+          </Td> */}
         </Tr>
       );
     });

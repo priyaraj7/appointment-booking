@@ -229,3 +229,10 @@ WHERE doctor_id = 1;
 -- INNER JOIN users 
 -- ON doctor.fk_user_id = users.user_id
 -- WHERE doctor.fk_user_id = users.user_id;
+
+
+-- SELECT doctor.*, users.*, patient.*
+-- FROM doctor 
+-- INNER JOIN users 
+-- ON doctor.fk_user_id = users.user_id
+-- WHERE doctor.fk_user_id = users.user_id;

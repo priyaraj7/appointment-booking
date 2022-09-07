@@ -3,7 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Doctor } from "./DoctorControl"; // type import
+
+import { getIndividualDoctor, updateIndividualDoctor } from "../../api/doctor";
+import type { Doctor } from "./DoctorControl"; // type import
 
 function EditDoctorInfo() {
   let [individualDoctor, setIndividualDoctor] = useState<Doctor>();
@@ -17,40 +19,21 @@ function EditDoctorInfo() {
   // get request
 
   useEffect(() => {
-    let ignore = false;
-    const getIndividualDoctor = async () => {
-      const request = await fetch(`/api/doctor/${userId}`);
-      const result = (await request.json()) as Doctor;
-
-      console.log(result);
-      if (!ignore) {
-        setIndividualDoctor(result);
-      }
-    };
-
-    getIndividualDoctor();
-    return () => {
-      ignore = true;
-    };
+    const fetchData = async () =>
+      setIndividualDoctor(await getIndividualDoctor(userId));
+    fetchData();
   }, [userId]);
+
+  //PUT request
+  const onSave = async (doc: Doctor) => {
+    await updateIndividualDoctor(doc, userId);
+    navigate("/api/admin");
+  };
 
   return (
     <>
       <Heading>Update Doctor Info</Heading>
-      <DoctorForm
-        individualDoctorDetail={individualDoctor}
-        onSave={async (doc: Doctor) => {
-          await fetch(`/api/doctor/${userId}`, {
-            method: "PUT",
-            body: JSON.stringify(doc),
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          });
-          navigate("/api/admin");
-        }}
-      />
+      <DoctorForm individualDoctorDetail={individualDoctor} onSave={onSave} />
     </>
   );
 }
